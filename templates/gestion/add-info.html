@@ -1,0 +1,63 @@
+{% extends 'users/base_usuarios.html' %}
+
+{% load static %}
+
+
+{% block content %}
+<div class="grid-container">
+    <div class="grid-y medium-grid-frame align-center">
+        <div class="grid-x grid-padding-x align-center bordered">
+            <form method="POST" class="cell medium-9 grid-x grid-margin-x" style="border: 1px solid #424242; padding: 2em; border-radius: 10px;">
+                {% csrf_token %}
+
+                <input type="hidden" name="user" value="{{ user.pk }}" />
+                <input type="hidden" name="deudores" value="{{ deudor.pk }}" />
+                <input type="hidden" name="conyugue" value="{{ conyugue.pk }}" />
+                <input type="hidden" name="codeudor" value="{{ codeudor.pk }}" />
+
+                <h3 class="cell" style="margin-bottom: 1em; text-align: center;">Añadir Datos</h3>
+                <div class="cell medium-6">
+                    <label>Tel fijo:</label>
+                    <div class="input-group">
+                        {{form.tel_fijo_add}}
+                    </div>
+                </div>
+                <div class="cell medium-6">
+                    <label>Celular:</label>
+                    <div class="input-group">
+                        {{form.celular_add}}
+                    </div>
+                </div>
+                <div class="cell medium-6">
+                    <label>Tel fijo empresa:</label>
+                    <div class="input-group">
+                        {{form.celular_add}}
+                    </div>
+                </div>
+                <div class="cell medium-6">
+                    <label>Celular empresa:</label>
+                    <div class="input-group">
+                        {{form.tel_empresa_add}}
+                    </div>
+                </div>
+                <div class="cell medium-3">
+                    
+                </div>
+                <div class="cell medium-6">
+                    <label>Email:</label>
+                    <div class="input-group">
+                        {{form.correo_add}}
+                    </div>
+                </div>
+                <div class="cell medium-4">
+
+                </div>
+                <div class="cell medium-8">
+                    <button type="submit" class="cell success button" style="width: 200px;">Crear</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+    

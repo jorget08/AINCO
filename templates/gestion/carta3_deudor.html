@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block content %}
+<style>
+    p, th, td{
+        font-size: large;
+    }
+    td {
+        text-align: center;
+    }
+</style>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<p>Barranquilla, {{fecha}}</p>
+<p><strong>Señor (a)</strong></p>
+<p>{{deudor.full_name}}, {{deudor.cedula}}</p>
+<p>{{deudor.direccion}}</p>
+<p>{{deudor.empresa_deudor.direccion}}</p>
+<p>{{deudor.celular}} {{deudor.adicionado_deudor.celular_add}}</p>
+<br>
+<br>
+<p><strong>Asunto:</strong> Notificación apoderamiento judicial para cobro de sus obligaciones crediticias.</p>
+<br>
+<p>Hemos declarado vencidas sus obligaciones y apoderamos a uno de nuestros abogados para elaborar la demanda 
+    judicial de cobro.  Una vez admitida la demanda por el juez asignado los gastos de cobranza, costas procesales
+     y agencias en derecho, aumentaran sus obligaciones hasta en un 50%.    Si Usted cancela ya, podrá ahorrarse 
+     una buena parte de este porcentaje y empezará un proceso de recuperación de su calificación crediticia.</p>
+<p>Todavía esta a tiempo, lo esperamos en nuestras oficinas o comuníquese con uno de nuestros asesores para actualizar la liquidación y acordar el pago.</p>
+            
+
+<p>El estado de sus obligaciones a la fecha de corte es:</p>
+
+<br>
+<table>
+    <thead>
+        <tr>
+            <th>Código del crédito</th>
+            <th>Saldo insoluto</th>
+            <th>Días de mora</th>
+            <th>Pago mínimo (estar al día)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for credito in creditos %}
+        <tr>
+            <td>{{credito.codigo_credito}}</td>
+            <td>{{credito.saldo_insoluto}}</td>
+            <td>{{credito.dias_mora}}</td>
+            <td>{{credito.pago_min_estar_al_dia}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<br>
+<br>
+<p>Si al recibir la presente ya normalizó sus obligaciones, por favor haga caso omiso a esta solicitud.</p>
+
+<br>
+<p>Cordial saludo,</p>
+<br>
+<br>
+<p>OFICINA JURIDICA NACIONAL</p>
+
+{% endblock content %}
+    

@@ -1,0 +1,217 @@
+{% extends 'users/base_usuarios.html' %}
+
+{% load static %}
+
+
+
+
+{% block content %}
+
+<div class="top-bar" id="responsive-menu" style="background-color: #00c2cb">
+    <div class="top-bar-left">
+        <ul class="dropdown menu" data-dropdown-menu style="background-color: #00c2cb">
+            <li style="width:160px;height:40px;"><img src="{% static 'img/logo.png' %}" alt="Logo" style="width:100%;height:100%;"></li>
+            <li style="width:10px"></li>
+            <li style="background-color: #5ce1e6"><a href="{% url 'biblioteca:biblio' %}" style="color:white; font-family:'Archivo Black';font-size:20px">Biblioteca</a></li>
+            <li style="width:10px"></li>
+            <li style="background-color: #5ce1e6"><a href="{% url 'users:agendar' %}" style="color:white; font-family:'Archivo Black';font-size:20px">Agendar</a></li>
+        </ul>
+    </div>
+    <div class="top-bar-right">
+        <form method="GET" class="">
+            <ul class="menu" style="background-color: #00c2cb">
+                <li><input class="" type="search" placeholder="Search" id="kword" name="kword"></li>
+                <li><button type="submit" class="button" style="color:white; font-family:'Archivo Black'; background-color: #5ce1e6">Buscar</button></li>
+                <li style="width:10px"></li>
+                <li><li style="background-color: #5ce1e6"><a href="{% url 'users:logout' %}" style="color:white; font-family:'Archivo Black';">Salir</a></li></li>
+            </ul>
+        </form>
+    </div>
+</div>
+
+<br>
+<style>
+    th, td {
+        border: 2px solid #5ce1e6;
+    }
+    thead {
+        background-color: #00c2cb; color:white;
+    }
+    .ali{
+        text-align: center;
+    }
+
+    td {
+        text-align: right;
+    }
+    
+</style>
+
+<div class="row">
+    <div class="columns">
+        <div class="table-scroll">
+            <table class="unstriped" style="empty-cells: hide;border-collapse: separate;">
+                <thead style="background-color: #00c2cb; color:white">
+                    <tr>
+                        <th></th>
+                        <th colspan="3" style="text-align: center;">Programación</th>
+                        <th colspan="2" style="text-align: center;">Vencidos</th>
+                        <th colspan="2" style="text-align: center;">Gestionados</th>
+                        <th colspan="2" style="text-align: center;">Normalizados</th>
+                        <th colspan="2" style="text-align: center;">Normalizados Vencidos</th>
+                        <th colspan="4" style="text-align: center;">Porcentajes</th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th>Deudores</th>
+                        <th>No. Créditos</th>
+                        <th>Saldo Insoluto</th>
+                        <th>No. Créditos</th>
+                        <th>Saldo Insoluto</th>
+                        <th>Deudores</th>
+                        <th>No. Créditos</th>
+                        <th>No. Créditos</th>
+                        <th>Saldo Insoluto</th>
+                        <th>No. Créditos</th>
+                        <th>Saldo Insoluto</th>
+                        <th>Deudores Gestionados</th>
+                        <th>No. Créditos Gestionados</th>
+                        <th>No. Créditos Normalizados</th>
+                        <th>No. Crédtos Normalizados Vencidos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="background-color: #00c2cb; color:white">Mes</td>
+                        <td>{{mes}}</td>
+                        <td>{{num_creditos}}</td>
+                        <td id="x">{{sal_in_mes}}</td>
+                        <td>{{num_vencidos}}</td>
+                        <td id="y">{{insolutos_vencidos}}</td>
+                        <td>{{gestionados}}</td>
+                        <td>{{gestionados_creditos}}</td>
+                        <td>{{normalizados}}</td>
+                        <td id=z>{{normalizados_saldos}}</td>
+                        <td>{{normalizados_vencidos}}</td>
+                        <td id="w">{{normalizados_vencidos_saldos}}</td>
+                        <td>{{porcentaje_gestionados}}%</td>
+                        <td>{{porcentaje_gestionados_creditos}}%</td>
+                        <td>{{porcentaje_normalizados}}%</td>
+                        <td>{{porcentaje_normalizados_vencidos}}%</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #00c2cb; color:white">Dia</td>
+                        <td>{{dia}}</td>
+                        <td>{{num_creditos_dia}}</td>
+                        <td id="q">{{sal_in_dia}}</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<br>
+
+<div class="row">
+    <div class="columns">
+        <div class="table-scroll">
+            <table class="sortable" id="myTable" style="border-collapse: separate;">
+                <thead style="background-color: #00c2cb; color:white">
+                    <tr>
+                        <th class="sorttable_nosort">Deudor</th>
+                        <th class="sorttable_nosort">Fecha Programada</th>
+                        <th class="sorttable_nosort">Hora</th>
+                        <th class="sorttable_nosort">Nueva acción</th>
+                        <th class="sorttable_nosort">Mis Comentarios</th>
+                        <th style="cursor: pointer">Saldo Insoluto <i class="fi-list"></i></th>
+                        <th style="cursor: pointer">Total Provisión <i class="fi-list"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for deudor in deudores %}
+                    <tr>
+                        <td class="ali"><a href="{% url 'gestion:gestion' deudor.cedula %}">{{deudor.nombres}} {{deudor.apellidos}}</a></td>
+
+                            <td class="ali">{{ deudor.fecha_nueva_accion }}</td>
+                            <td class="ali">{{ deudor.hora_nueva_accion }}</td>
+                            <td class="ali">{{ deudor.nueva_accion }}</td>
+                            <td class="ali">{{ deudor.comentarios }}</td>
+                                
+                            <td>{{ deudor.total_insolutos }}</td>
+                            <td>{{ deudor.total_provisiones }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="">
+                {% if is_paginated %}
+                <nav aria-label="Pagination">
+                    <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                        <li class="pagination-previous">
+                            <a href="?page={{page_obj.previous_page_number}}">Atras</a>
+                        </li>
+                        {% endif %}
+                        
+                        {% for pagina in paginator.page_range %}
+        
+                        
+                        {% ifequal pagina page_obj.number %}
+                        <li class="current"><span class="show-for-sr">You're on page</span> {{ pagina }}</li>
+                        {% else %}
+                        <li class=""><a href="?page={{pagina}}">{{ pagina }}</a></li>
+                        {% endifequal %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                        <li class="pagination-next">
+                            <a href="?page={{page_obj.next_page_number}}">Siguiente</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+let table = document.getElementById('myTable'), cells = table.getElementsByTagName('td');
+for (let i=1,len=cells.length; i<len; i++){
+    let espace = " "
+    let z = cells[i].textContent
+    if (z.includes(espace) !== true){
+        let c = parseInt(z)
+        if (isNaN(c) !== true){
+            cells[i].textContent = "$" + c.toLocaleString('de-DE', { style: 'decimal', decimal: '3' })
+        }
+}
+}
+
+let one = document.getElementById("x").textContent;
+let two = parseInt(one);
+document.getElementById("x").textContent = "$" + two.toLocaleString('de-DE', { style: 'decimal', decimal: '3' });
+
+let ee = document.getElementById("y").textContent;
+let aa = parseInt(ee);
+document.getElementById("y").textContent = "$" + aa.toLocaleString('de-DE', { style: 'decimal', decimal: '3' });
+
+let bb = document.getElementById("z").textContent;
+let cc = parseInt(bb);
+document.getElementById("z").textContent = "$" + cc.toLocaleString('de-DE', { style: 'decimal', decimal: '3' });
+
+let zz = document.getElementById("w").textContent;
+let xx = parseInt(zz);
+document.getElementById("w").textContent = "$" + xx.toLocaleString('de-DE', { style: 'decimal', decimal: '3' });
+
+let ww = document.getElementById("q").textContent;
+let nn = parseInt(ww);
+document.getElementById("q").textContent = "$" + nn.toLocaleString('de-DE', { style: 'decimal', decimal: '3' });
+
+</script>
+
+{% endblock content %}

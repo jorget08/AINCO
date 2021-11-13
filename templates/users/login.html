@@ -1,0 +1,46 @@
+{% extends 'users/base_usuarios.html' %}
+
+{% load static %}
+
+
+{% block content %}
+
+<div class="grid-container">
+    <div class="grid-y medium-grid-frame align-center">
+        <div class="grid-x grid-padding-x align-center bordered">
+                
+                <form class="cell medium-5 grid-x grid-margin-x" method="post" action="{% url 'users:login' %}
+                    " style="border: 1px solid #424242; padding: 2em; border-radius: 10px;">
+                    {% csrf_token %} 
+                    <h4 class="cell" style="text-align: center; font-family: Copperplate / Copperplate Gothic Light, sans-serif; font-size: 300%;">AINCO</h4>
+                    <div class="cell medium-12">
+                        {% if form.errors %}
+                        <p class="aler alert-danger" style="color:red">
+                            Usuario o contraseña incorrectos. Por favor, intenta de nuevo
+                        </p>
+                        {% endif%}
+                    </div>
+                    <div class="cell medium-12">
+                        <label>User Name</label>
+                        {{form.username}}
+                    </div>
+                    <div class="cell medium-12">
+                        <label>Password</label>
+                        {{form.password}}
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <div class="cell medium-3">
+                    </div>
+                    <div class="cell medium-6 align-center">
+                        <button type="submit" class="cell warning button">Ingresar</button>
+                    </div>
+                </form>
+        </div>
+    </div>
+</div>
+    
+{% endblock content %}
+    

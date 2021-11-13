@@ -1,0 +1,596 @@
+{% extends 'gestion/base_gestion.html' %}
+
+{% load static %}
+
+{% block body-content %}
+<br>
+<style>
+    th, td {
+        border: 2px solid #5ce1e6;
+    }
+    thead {
+        background-color: #00c2cb; color:white;
+    }
+    .ali {
+        text-align: right;
+    }
+    td {
+        text-align: center;
+    }
+</style>
+
+<div class="row">
+    <div class="columns">
+        <div class="table-scroll">
+            <table class="stack" style="border: 2px solid #00c2cb">
+                <thead>
+                    <tr>
+                        <th>Información general</th>
+                        <th>Nombre</th>
+                        <th>Codigo Crédito</th>
+                        <th>Telefono 1</th>
+                        <th>Telefono 2</th>
+                        <th>Celular 1</th>
+                        <th>Celular 2</th>
+                        <th>Email</th>
+                        <th>Telefono empresa</th>
+                        <th>Celular empresa</th>
+                        <th>Telefono añadido</th>
+                        <th>Celular añadido</th>
+                        <th>Email añadido</th>
+                        <th>Telefono empresa añadido</th>
+                        <th>Celular empresa añadido</th>
+                        <th>Añadir info</th>
+                        <th>Ver mas info</th>
+                    </tr>
+                </thead>
+        
+                <tbody>
+                    <tr>
+                        <th style="background-color: #00c2cb; color:white">Info deudor</th>
+                        <td>{{deudor.nombres}} {{deudor.apellidos}}</td>
+                        <td></td>
+                        <td>{{deudor.tel_fijo}}</td>
+                        <td>{{deudor.tel_fijo2}}</td>
+                        <td>{{deudor.celular}}<a href="https://api.whatsapp.com/send?phone=+57{{deudor.celular}}" target="_blank"><img src="static\img\wa.png" style="width:32px;height:32px;"></a></td>
+                        {% if deudor.celular2 %}
+                        <td>{{deudor.celular2}}<a href="https://api.whatsapp.com/send?phone=+57{{deudor.celular2}}" target="_blank"><img src="static\img\wa.png" style="width:32px;height:32px;"></a></td>
+                        {% else %}
+                        <td>{{deudor.celular2}}</td>    
+                        {% endif %}
+                        <td><button data-open="mail" style="cursor: pointer; color: blue" >{{deudor.correo}}</button></td>
+                        <!--Info empresa-->
+                        {% for empresa in deudor.empresa_set.all %}
+                            <td>{{empresa.tel_fijo}}</td>
+                            <td>{{empresa.celular}}</td>
+                        {% endfor %}
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <!--add-->
+                        <td><a href="{% url 'gestion:add-info' deudor.pk %}" target="_blank" class="button"><i class="fi-plus"></i></a></td>
+                        <td></td>
+                    </tr>   
+            
+                </tbody>
+                <tbody>
+                {% for conyugue in conyugue %}
+                    <tr>
+                        <th style="background-color: #00c2cb; color:white">Conyugue deudor</th>
+                        <td>{{conyugue.nombres}} {{conyugue.apellidos}}</td>
+                        <td></td>
+                        <td>{{conyugue.tel_fijo}}</td>
+                        <td>{{conyugue.tel_fijo2}}</td>
+                        <td>{{conyugue.celular}}<a href="https://api.whatsapp.com/send?phone=+57{{conyugue.celular}}" target="_blank"><img src="static\img\wa.png" style="width:32px;height:32px;"></a></td>
+                        {% if conyuge.celular2 %}
+                        <td>{{conyuge.celular2}}<a href="https://api.whatsapp.com/send?phone=+57{{conyugue.celular2}}" target="_blank"><img src="static\img\wa.png" style="width:32px;height:32px;"></a></td>
+                        {% else %}
+                        <td>{{conyuge.celular2}}</td>    
+                        {% endif %}
+                        <td><button data-open="mail" style="cursor: pointer; color: blue">{{conyugue.correo}}</button></td>
+                        {% for empresa in codeudor.empresa_set.all %}
+                            <td>{{empresa.tel_fijo}}</td>
+                            <td>{{empresa.celular}}</td>
+                        {% endfor %}
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <!--add-->
+                        <td><a class="button" target="_blank" href="{% url 'gestion:add-info' conyugue.pk %}"><i class="fi-plus"></i></a></td>
+                        <td></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+        
+                <tbody>
+                    {% for cre in credito %}
+                    {% for co in cre.codeudores.all %}
+                    <tr>
+                        <th style="background-color: #00c2cb; color:white">Codeudor deudor</th>
+                        <td>{{co.nombres}} {{co.apellidos}}</td>
+                        <td>{{cre.codigo_credito}}</td>
+                            <td>{{co.tel_fijo}}</td>
+                            <td>{{co.tel_fijo2}}</td>
+                            <td>{{co.celular}}<a href="https://api.whatsapp.com/send?phone=+57{{co.celular}}" target="_blank"><img src="static\img\wa.png" style="width:32px;height:32px;"></a></td>
+                            
+                            {% if co.celular2 %}
+                            <td>{{co.celular2}}<a href="https://api.whatsapp.com/send?phone=+57{{co.celular2}}" target="_blank"><img src="static\img\wa.png" style="width:32px;height:32px;"></a></td>
+                            {% else %}
+                            <td>{{co.celular2}}</td>    
+                            {% endif %}
+                                
+                            <td><button data-open="mail" style="cursor: pointer; color: blue">{{co.correo}}</button></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <!--add-->
+                            <td><a class="button" target="_blank" href="{% url 'gestion:add-info' co.pk %}"><i class="fi-plus"></i></a></td>
+                            <td></td>
+                        </tr>
+                        {% endfor %}
+                        {% endfor %}
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+    <br>
+    <br>
+    <h5>Liquidación de cartera</h5>
+    <table id="creditoTable">
+ 
+        <thead>
+            <tr>
+                <th>Fecha de corte</th>
+                <th>Codigo del crédito</th>
+                <th>Linea de crédito</th>
+                <th>Dias mora</th>
+                <th>Pago mínimo (para estar al día)</th>
+                <th>Pago total del crédito</th>
+                <th>Pago mínimo para liberar provisión</th>
+                <th>Valor total de la provisión</th>
+                <th>Dias de corte</th>
+                <th>Saldo cuenta de ahorros</th>
+                <th>Valor inicial del préstamo</th>
+                <th>Saldo insoluto</th>
+            </tr>
+        </thead>
+        
+        
+        <tbody>
+            {% for credito in credito %}
+            <tr>
+                <td>{{credito.fecha_corte}}</td>
+                <td>{{credito.codigo_credito}}</td>
+                <td>{{credito.linea_credito}}</td>
+                <td>{{credito.dias_mora}}</td>
+                <td class="ali">{{credito.pago_min_estar_al_dia}}</td>
+                <td class="ali">{{credito.pago_total}}</td>
+                <td class="ali">{{credito.pago_min_liberar_provision}}</td>
+                <td class="ali">{{credito.valor_total_provision}}</td>
+                <td>{{credito.dia_corte}}</td>
+                <td class="ali">{{credito.saldo_cuenta_ahorros}}</td>
+                <td class="ali">{{credito.valor_credito}}</td>
+                <td class="ali">{{credito.saldo_insoluto}}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td>Totales</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="ali">{{deudor.total_estar_al_dia}}</td>
+                <td class="ali">{{deudor.total_credito}}</td>
+                <td class="ali">{{deudor.total_liberar_provision}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="ali">{{deudor.total_insolutos}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <br>
+    <table id="pagosTable">
+         
+        <thead>
+            <tr>
+                <th colspan="3">Reporte de Pagos</th>
+            </tr>
+            <tr>
+                <th>Fecha de pago</th>
+                <th>Tipo de pago aplicado</th>
+                <th>Forma de pago</th>
+                <th>Valor del pago</th>
+                <th>No. del recibo de pago</th>
+                <th>Valor abono al saldo del crédito</th>
+                <th>Valor abono a intereses corrientes</th>
+                <th>Valor abono a intereses moratorios</th>
+                <th>Valor abono a gastos de cobranza</th>
+                <th>Valor abono a honorario</th>
+            </tr>
+        </thead>
+        
+        {% for pago in pagos %}
+        <tbody>
+            <tr>
+                <td>{{pago.fecha_pago}}</td>
+                <td>{{pago.tipo_pago_aplicado}}</td>
+                <td>{{pago.forma_pago}}</td>
+                <td class="ali">{{pago.valor_pago}}</td>
+                <td class="ali">{{pago.no_recibo_pago}}</td>
+                <td class="ali">{{pago.valor_abono_saldo_credito}}</td>
+                <td class="ali">{{pago.valor_abono_intereses_corrientes}}</td>
+                <td class="ali">{{pago.valor_abono_intereses_moratorios}}</td>
+                <td class="ali">{{pago.valor_gastos_cobranza}}</td>
+                <td class="ali">{{pago.valor_abono_honorarios}}</td>
+        </tbody>
+        {% endfor %}
+    </table>
+
+    <br>
+    <br>
+
+        <table id="acuerdosTable">
+            <thead>
+                <tr>
+                    <th>Acuerdos de pago</th>
+                </tr>
+                <tr>
+                    <th>Fecha de compromiso</th>
+                    <th>valor de compromiso</th>
+                    <th>Forma de pago</th>
+                </tr>
+            </thead>
+            {% for a in acuerdo_pago %}
+            <tbody>
+                <tr>
+                    <td>{{a.fecha_1}}</td>
+                    <td class="ali">{{a.valor_compromiso}}</td>
+                    <td>{{a.forma_pago}}</td>
+                </tr>
+                
+                {% if a.fecha_2 != None %}
+                      
+                <tr>
+                    <td>{{a.fecha_2}}</td>
+                    <td class="ali">{{a.valor_compromiso_2}}</td>
+                    <td>{{a.forma_pago}}</td>
+                </tr>
+                {% endif %}
+
+                {% if a.fecha_3 != None %}
+                <tr>
+                    <td>{{a.fecha_3}}</td>
+                    <td class="ali">{{a.valor_compromiso_3}}</td>
+                    <td>{{a.forma_pago}}</td>
+                </tr>
+                {% endif %}
+            </tbody>
+            {% endfor %}
+        </table>
+        
+    
+    <br>
+    <br>
+
+    <table>
+        <thead>
+            <tr>
+                <td colspan="3">Gestiones Realizadas</td>
+            </tr>
+            <tr>
+                <th>Fecha contacto</th>
+                <th>Usuario</th>
+                <th>Persona contactada</th>
+                <th>Nombre y/o parentesco</th>
+                <th>Tipo de gestion</th>
+                <th>Resultado de gestion</th>
+                <th>Causal de no pago</th>
+                <th>Calificación de viabilidad</th>
+                <th>Nueva acción</th>
+                <th>observaciones</th>
+            </tr>
+        </thead>
+        {% for gestion in gestion|dictsortreversed:"fecha_gestion"|slice:"3" %}
+        <tbody>
+            <tr>
+                <td>{{gestion.fecha_gestion}}</td>
+                <td>{{gestion.user.username}}</td>
+                <td>{{gestion.get_persona_contactada}}</td>
+                <td>{{gestion.nombre_parentesco}}</td>
+                <td>{{gestion.get_tipo_gestion}}</td>
+                <td>{{gestion.get_resultado_gestion}}</td>
+                <td>{{gestion.get_causales_no_pago}}</td>
+                <td>{{gestion.get_califiacion_viabilidad}}</td>
+                <td>{{gestion.get_nueva_accion}}</td>
+                <td>{{gestion.observaciones}}</td>
+            </tr>
+        </tbody>
+        {% endfor %}
+        
+    </table>
+    
+</div>
+
+<br>
+<br>
+
+
+<!--FORMULARIO-->
+
+
+<div class="grid-container align-center">
+        <div class="grid-x grid-padding-x align-center bordered">
+            <form class="cell medium-12 grid-x grid-margin-x" method="POST" style="border: 5px solid #5ce1e6; border-radius: 10px;">
+                {% csrf_token %}
+
+                <input type="hidden" name="user" value="{{ user.pk }}" />
+                <input type="hidden" name="deudores" value="{{ deudo.pk }}" />
+                <input type="hidden" name="acuerdo_pago" value="{{ acuerdo_pago.pk }}" />
+
+                <h3 class="cell" style="margin-bottom: 1em; text-align: center;">AÑADIR GESTION</h3>
+                <div class="cell medium-4">
+                    <label>Persona contactada:</label>
+                    <div class="input-group">
+                        {{ form.persona_contactada }}
+                    </div>
+                </div>
+
+                <div class="cell medium-4">
+                    <label>Nombre y/o parentesco:</label>
+                    <div class="input-group">
+                        {{ form.nombre_parentesco }}
+                    </div>
+                </div>
+
+                <div class="cell medium-4">
+                    <label>Tipo de gestion:</label>
+                    <div class="input-group">
+                        {{ form.tipo_gestion }}
+                    </div>
+                </div>
+
+                <div class="cell medium-4">
+                    <label>Resultado de gestion:</label>
+                    <div class="input-group">
+                        {{ form.resultado_gestion }}
+                    </div>
+                </div>
+
+                <div class="cell medium-4">
+                    <label>Causal de no pago:</label>
+                    <div class="input-group">
+                        {{ form.causales_no_pago }}
+                    </div>
+                </div>
+
+                <div class="cell medium-4">
+                    <label>Nueva acción:</label>
+                    <div class="input-group">
+                        {{ form.nueva_accion }}
+                    </div>
+                </div>
+
+                <div class="cell medium-4">
+                    <label>Caulificación de viabilidad:</label>
+                    <div class="input-group">
+                        {{ form.califiacion_viabilidad }}
+                    </div>
+                </div>
+
+                <div class="cell medium-4">
+                    <label>Fecha nueva acción:</label>
+                    <div>
+                        <input type="date" name="fecha_nueva_accion">
+                    </div>
+                </div>
+
+                <div class="cell medium-4">
+                    <label>Hora nueva acción:</label>
+                    <div class="input-group">
+                        <input type="time" name="hora_nueva_accion">
+                    </div>
+                </div>
+
+                <div class="cell medium-6">
+                    <label>Observaciones:</label>
+                    <div class="input-group">
+                        {{ form.observaciones }}
+                    </div>
+                </div>
+                <div class="cell medium-6">
+                    <label>Mis comentarios:</label>
+                    <div class="input-group">
+                        {{ form.comentarios }}
+                    </div>
+                </div>
+
+                <div class="cell medium-4">
+                    <label><strong>Solo</strong> en caso de tener un acuerdo de pago:</label>
+                    <label>Cumplimiento acuerdo de pago:</label>
+                    <div class="input-group">
+                        {{ form.estado_acuerdo_pago }}
+                    </div>
+                </div>
+                <div class="cell medium-4">
+                    <label><strong>Solo</strong> en caso de cartera castigada:</label>
+                    <label>Marcar para indicar que la cartera fue castigada</label>
+                    <div class="input-group">
+                        {{ form.castigada }}
+                    </div>
+                </div>
+                <div class="cell medium-4">
+                    <label>Evidencia de gestion: </label>
+                    <div class="input-group">
+                        {{form.evidencia}}
+                    </div>
+                </div>
+
+                <div class="cell medium-4">
+                    
+                </div>
+                <div class="cell medium-4">
+                    <button type="submit" class="button success" style="width: 210px;"> Gestionar</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="reveal" id="acuerdoPago" data-reveal>
+    <h3>Acuerdo De Pago</h3>
+    <form action="{% url 'gestion:acuerdo' deudor.pk %}" method="POST" class="grid-x grid-margin-x">
+        {% csrf_token %}
+        <button class="close-button" data-close aria-label="Close modal" type="button">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+        <input type="hidden" name="user" value="{{ user.pk }}" />
+        <input type="hidden" name="deudores" value="{{ deudo.pk }}" />
+
+        <div class="cell medium-6">
+            <label>Fecha compromiso:</label>
+            <div class="">
+                {{acuerdo.fecha_1}}
+            </div>
+        </div>
+
+        <div class="cell medium-6">
+            <label>Valor del compromiso:</label>
+            <div class="input-group">
+                {{acuerdo.valor_compromiso}}
+            </div>
+        </div>
+
+        <div class="cell medium-6">
+            <label>Fecha compromiso:</label>
+            <div class="">
+                {{acuerdo.fecha_2}}
+            </div>
+        </div>
+
+        <div class="cell medium-6">
+            <label>Valor del compromiso:</label>
+            <div class="input-group">
+                {{acuerdo.valor_compromiso_2}}
+            </div>
+        </div>
+
+        <div class="cell medium-6">
+            <label>Fecha compromiso:</label>
+            <div class="input-group">
+                {{acuerdo.fecha_3}}
+            </div>
+        </div>
+
+        <div class="cell medium-6">
+            <label>Valor del compromiso:</label>
+            <div class="input-group">
+              {{ acuerdo.valor_compromiso_3 }}
+            </div>
+        </div>
+
+        <div class="cell medium-6">
+            <label>Forma de pago:</label>
+            <div class="input-group">
+              {{ acuerdo.forma_pago }}
+            </div>
+        </div>
+        <div class="cell medium-6">
+            <label>Evidencia:</label>
+            <div class="input-group">
+              {{ acuerdo.evidencia }}
+            </div>
+        </div>
+
+        <button type="submit" class="cell success button">Guardar acuerdo</button>
+    </form>
+</div>
+
+<div class="reveal" id="mail" data-reveal>
+    <h3>Email</h3>
+    <form action="{% url 'gestion:email' deudor.pk %}" method="POST" class="grid-x grid-margin-x">
+        {% csrf_token %}
+        <button class="close-button" data-close aria-label="Close modal" type="button">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <input type="hidden" name="de" value="{{ user.email }}">
+        <input type="hidden" name="pass_de" value="{{ user.pass_email }}">
+        <div class="cell medium-8">
+            <label>Para:</label>
+            {{formulario.para}}
+        </div>
+        <div class="cell medium-12">
+            <label>Asunto:</label>
+            {{formulario.subject}}
+        </div>
+        <div class="cell medium-12">
+            <label>Mensaje:</label>
+            {{formulario.message}}
+        </div>
+        <button type="submit" class="cell success button">Enviar correo</button>
+        
+    </form>
+</div>
+<script>
+
+let table = document.getElementById('creditoTable'), cells = table.getElementsByTagName('td');
+for (let i=1,len=cells.length; i<len; i++){
+    let espace = " "
+    let z = cells[i].textContent
+    if (z.includes(espace) !== true){
+        let c = parseInt(z)
+        if (isNaN(c) !== true){
+            if (i === 1 || i === 3 || i === 8 || i === 13 || i === 15 || i === 20 ||
+                i === 25 || i === 27 || i === 32 || i === 37 || i === 39 || i === 44 ||
+                i === 49 || i === 51 || i === 56 || i === 61 || i === 63 || i === 68 ||
+                i === 73 || i === 75 || i === 80 || i === 85 || i === 87 || i === 92){
+                cells[i].textContent =  c.toLocaleString('de-DE', { style: 'decimal', decimal: '3' })
+            }
+            else{
+                cells[i].textContent = "$" + c.toLocaleString('de-DE', { style: 'decimal', decimal: '3' })
+            }
+        }
+    }
+}
+let table2 = document.getElementById('pagosTable'), cells2 = table2.getElementsByTagName('td');
+for (let i=1,len=cells2.length; i<len; i++){
+    let espace = " "
+    let z = cells2[i].textContent
+    if (z.includes(espace) !== true){
+        let c = parseInt(z)
+        if (isNaN(c) !== true){
+            cells2[i].textContent = "$" + c.toLocaleString('de-DE', { style: 'decimal', decimal: '3' })
+        }
+    }
+}
+let table3 = document.getElementById('acuerdosTable'), cells3 = table3.getElementsByTagName('td');
+for (let i=1,len=cells3.length; i<len; i++){
+    let espace = " "
+    let z = cells3[i].textContent
+    if (z.includes(espace) !== true){
+        let c = parseInt(z)
+        if (isNaN(c) !== true){
+            cells3[i].textContent = "$" + c.toLocaleString('de-DE', { style: 'decimal', decimal: '3' })
+        }
+    }
+}
+
+</script>
+
+{% endblock body-content %}

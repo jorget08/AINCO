@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block content %}
+<style>
+    p, th, td{
+        font-size: large;
+    }
+    td {
+        text-align: center;
+    }
+</style>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<p>Barranquilla, {{fecha}}</p>
+<p><strong>Señor (a)</strong></p>
+<p>{{deudor.full_name}}, {{deudor.cedula}}</p>
+<p>{{deudor.direccion}}</p>
+<p>{{deudor.empresa_deudor.direccion}}</p>
+<p>{{deudor.celular}} {{deudor.adicionado_deudor.celular_add}}</p>
+<br>
+<br>
+<p><strong>Asunto:</strong> Última solicitud de normalización de sus obligaciones crediticias.</p>
+<br>
+<p>Con todos los recordatorios anteriores esperábamos la normalización de sus obligaciones.
+     Antes de proceder con la notificación a sus codeudores y/o referencias, queremos conocer las
+      causas que están originando la mora, para buscar la mejor solución, ahorrándole costos por 
+      intereses moratorios, gastos de cobranzas y costas por un eventual proceso jurídico. 
+      Requerimos urgentemente su presencia en nuestras oficinas o comunicarse con uno de nuestros asesores, 
+      aproveche esta oportunidad.</p>
+            
+
+<p>El estado de sus obligaciones a la fecha de corte es:</p>
+
+<br>
+<table>
+    <thead>
+        <tr>
+            <th>Código del crédito</th>
+            <th>Saldo insoluto</th>
+            <th>Días de mora</th>
+            <th>Pago mínimo (estar al día)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for credito in creditos %}
+        <tr>
+            <td>{{credito.codigo_credito}}</td>
+            <td>{{credito.saldo_insoluto}}</td>
+            <td>{{credito.dias_mora}}</td>
+            <td>{{credito.pago_min_estar_al_dia}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<br>
+<br>
+<p>Si al recibir la presente ya normalizó sus obligaciones, por favor haga caso omiso a esta solicitud.</p>
+
+<br>
+<p>Cordial saludo,</p>
+<br>
+<br>
+<p>DIRECCION NACIONAL DE NORMALIZACION DE CARTERA</p>
+<p>Bogotá</p>
+
+{% endblock content %}
+    

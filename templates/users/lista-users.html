@@ -1,0 +1,36 @@
+{% extends 'users/base_usuarios.html' %}
+
+{% load static %}
+
+
+{% block content %}
+<div class="grid-x grid-margin-x">
+    <h3 class="cell" style="text-align: center;">Ultimas Ventas Registradas</h3>
+    <div class="cell">
+        <table>
+            <thead>
+                <th>Usuario</th>
+                <th>Nombre</th>
+                <th>Cambiar contraseña</th>
+            </thead>
+            <tbody>
+                
+                {% if object_list %}
+                    
+                
+                {% for object in object_list %}
+                <tr>
+                    <td>{{object.username}}</td>
+                    <td>{{object.full_name}}</td>
+                    <td>
+                        <a href="{% url 'users:change' object.id %}">Recuperar contraseña</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content %}
+    
