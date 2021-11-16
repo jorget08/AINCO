@@ -130,7 +130,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for deudor in deudores|dictsort:"author.age" %}
+                    {% for deudor in deudores|dictsort:"fecha_nueva_accion" %}
                     <tr>
                         <td class="ali"><a href="{% url 'gestion:gestion' deudor.cedula %}">{{deudor.nombres}} {{deudor.apellidos}}</a></td>
 
