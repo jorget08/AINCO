@@ -1,3 +1,5 @@
+import base64
+
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic.edit import FormView
@@ -164,6 +166,7 @@ class ChangePwd(LoginRequiredMixin, generic.FormView):
     form_class = UpdatePasswordForm
     success_url = reverse_lazy('users:login')
 
+    
     def form_valid(self, form):
         usuario = self.request.user
         user = authenticate(
@@ -175,7 +178,19 @@ class ChangePwd(LoginRequiredMixin, generic.FormView):
             new_password = form.cleaned_data['password2']
             usuario.set_password(new_password)
             usuario.first_time = False
-            usuario.pass_email = form.cleaned_data['email_pass']
+            
+            pssw_email = form.cleaned_data['email_pass']
+            pass_bytes = pssw_email.encode('ascii')
+            base64_bytes = base64.b64encode(pass_bytes)
+            base64_string = base64_bytes.decode('ascii')
+            usuario.pass_email = base64_string
+            
+            # passw_email = passw_email.encode()
+
+            #sal = bcrypt.gensalt()
+
+            #usuario.pass_email = bcrypt.hashpw(passw_email, sal)
+            
             usuario.save()
 
         logout(self.request)

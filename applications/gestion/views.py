@@ -1,4 +1,5 @@
 import threading
+import base64
 
 from datetime import date
 
@@ -218,6 +219,11 @@ class EmailSend(LoginRequiredMixin, generic.TemplateView):
         message = self.request.POST.get('message')
         de = self.request.POST.get('de')           
         passw = self.request.POST.get('pass_de')
+
+        passwdd = base64.b64decode(passw)
+        passwd = passwdd.decode('ascii')
+
+
         html_email = loader.render_to_string(
             'gestion/carta1_deudor.html',
             {
@@ -234,7 +240,7 @@ class EmailSend(LoginRequiredMixin, generic.TemplateView):
             from_email=de,
             recipient_list=[para],
             auth_user=de,
-            auth_password=passw,
+            auth_password=passwd,
             html_message=html_email,
         )
 
