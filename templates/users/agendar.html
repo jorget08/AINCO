@@ -2,6 +2,7 @@
 
 {% load static %}
 
+{% load humanize %}
 
 {% block content %}
 <style>
@@ -57,8 +58,8 @@
                     <input type="hidden" name="deudores" value="{{ deudor.pk }}" />
                     {% csrf_token %}
                     <td>{{deudor.nombres}} {{deudor.apellidos}}</td>
-                    <td class="ali">{{ deudor.total_insolutos }}</td>
-                    <td class="ali">{{ deudor.total_provisiones }}</td>
+                    <td>$ {{ deudor.total_insolutos|intcomma }}</td>
+                    <td>$ {{ deudor.total_provisiones|intcomma }}</td>
                     <td>{{deudor.dia_max_corte}}</td>
                     <td>{{deudor.dia_max_mora}}</td>
                     <td>{{deudor.estado_inicial}}</td>
@@ -74,31 +75,5 @@
     </div>
 </div>
 <br>
-
-<script>
-let table = document.getElementById('agendarTable'), cells = table.getElementsByTagName('td');
-for (let i=1,len=cells.length; i<len; i++){
-    let espace = " "
-    let z = cells[i].textContent
-    if (z.includes(espace) !== true){
-        let c = parseInt(z)
-        if (isNaN(c) !== true){
-            cells[i].textContent = "$" + c.toLocaleString('de-DE', { style: 'decimal', decimal: '3' })
-            i += 7
-        }
-}
-}for (let i=2,len=cells.length; i<len; i++){
-    let espace = " "
-    let z = cells[i].textContent
-    if (z.includes(espace) !== true){
-        let c = parseInt(z)
-        if (isNaN(c) !== true){
-            cells[i].textContent = "$" + c.toLocaleString('de-DE', { style: 'decimal', decimal: '3' })
-            i +=7
-        }
-}
-}
-</script>
         
 {% endblock content %}
-    

@@ -33,7 +33,7 @@ class UserRegisterForm(forms.ModelForm):
             'username',
             'email',
             'full_name',
-            'position',
+            'ocupation',
             'genero',
             'date_birth',
         )

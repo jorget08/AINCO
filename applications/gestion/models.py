@@ -114,10 +114,10 @@ class Gestion(models.Model):
         (SEGUIMIENTO_ACUERDO, 'Seguimiento al acuerdo de pago'),
     ]
     
-    ESTADO_ACUERDO_PAGO_CHOICES = [
-        (CUMPLIDO, 'Cumplido'),
-        (INCUMPLIDO, 'No cumplido')
-    ]
+    #ESTADO_ACUERDO_PAGO_CHOICES = [
+    #    (CUMPLIDO, 'Cumplido'),
+    #    (INCUMPLIDO, 'No cumplido')
+    #]
 
     persona_contactada = models.CharField(max_length=2, choices=PERSONA_CONTACTADA_CHOICES)
     fecha_gestion = models.DateField(auto_now_add=True)
@@ -132,9 +132,9 @@ class Gestion(models.Model):
     nueva_accion = models.CharField(max_length=2, choices=NUEVA_ACCION_CHOICES)
     hora_nueva_accion = models.TimeField()
     
-    estado_acuerdo_pago = models.CharField(max_length=2, choices=ESTADO_ACUERDO_PAGO_CHOICES, blank = True, null = True)
+    #estado_acuerdo_pago = models.CharField(max_length=2, choices=ESTADO_ACUERDO_PAGO_CHOICES, blank = True, null = True)
 
-    castigada = models.BooleanField(default=False)
+    #castigada = models.BooleanField(default=False)
     evidencia = models.FileField(upload_to='acuerdos', blank = True)
     
     modified = models.DateTimeField(auto_now=True)

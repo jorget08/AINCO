@@ -8,13 +8,14 @@ from applications.deudor.models import Deudor
 class AcuerdosPago(models.Model):
     fecha = models.DateTimeField(auto_now_add=True)
     valor_compromiso = models.BigIntegerField()
-    forma_pago = models.CharField(max_length=50)
     evidencia = models.FileField(upload_to='acuerdos', blank = True)
     fecha_1 = models.DateField(null = True)
     fecha_2 = models.DateField(blank=True, null = True)
     fecha_3 = models.DateField(blank=True, null = True)
     valor_compromiso_2 = models.BigIntegerField(blank=True, null = True)
     valor_compromiso_3 = models.BigIntegerField(blank=True, null = True)
+    forma_pago = models.CharField(max_length=50)
+    estado_del_acuerdo = models.CharField(max_length=50, default = 'Pendiente')
 
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, null = True)

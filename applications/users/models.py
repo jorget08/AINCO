@@ -32,7 +32,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=15, unique=True)
     email = models.EmailField(unique=True)
     full_name = models.CharField('Nombres', max_length=100)
-    position = models.CharField(
+    ocupation = models.CharField(
         max_length=1, 
         choices=OCUPATION_CHOICES, 
         blank=True

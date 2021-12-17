@@ -2,7 +2,7 @@
 
 {% load static %}
 
-
+{% load humanize %}
 
 
 {% block content %}
@@ -85,15 +85,15 @@
                         <td style="background-color: #00c2cb; color:white">Mes</td>
                         <td>{{mes}}</td>
                         <td>{{num_creditos}}</td>
-                        <td id="x">{{sal_in_mes}}</td>
+                        <td>${{sal_in_mes|intcomma}}</td>
                         <td>{{num_vencidos}}</td>
-                        <td id="y">{{insolutos_vencidos}}</td>
+                        <td>${{insolutos_vencidos|intcomma}}</td>
                         <td>{{gestionados}}</td>
                         <td>{{gestionados_creditos}}</td>
                         <td>{{normalizados}}</td>
-                        <td id=z>{{normalizados_saldos}}</td>
+                        <td>${{normalizados_saldos|intcomma}}</td>
                         <td>{{normalizados_vencidos}}</td>
-                        <td id="w">{{normalizados_vencidos_saldos}}</td>
+                        <td>${{normalizados_vencidos_saldos|intcomma}}</td>
                         <td>{{porcentaje_gestionados}}%</td>
                         <td>{{porcentaje_gestionados_creditos}}%</td>
                         <td>{{porcentaje_normalizados}}%</td>
@@ -103,8 +103,7 @@
                         <td style="background-color: #00c2cb; color:white">Dia</td>
                         <td>{{dia}}</td>
                         <td>{{num_creditos_dia}}</td>
-                        <td id="q">{{sal_in_dia}}</td>
-                        <td></td>
+                        <td>${{sal_in_dia|intcomma}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -117,7 +116,7 @@
 <div class="row">
     <div class="columns">
         <div class="table-scroll">
-            <table class="sortable" id="myTable" style="border-collapse: separate;">
+            <table class="sortable" style="border-collapse: separate;">
                 <thead style="background-color: #00c2cb; color:white">
                     <tr>
                         <th class="sorttable_nosort">Deudor</th>
@@ -134,13 +133,13 @@
                     <tr>
                         <td class="ali"><a href="{% url 'gestion:gestion' deudor.cedula %}">{{deudor.nombres}} {{deudor.apellidos}}</a></td>
 
-                            <td class="ali">{{ deudor.fecha_nueva_accion }}</td>
-                            <td class="ali">{{ deudor.hora_nueva_accion }}</td>
-                            <td class="ali">{{ deudor.nueva_accion }}</td>
-                            <td class="ali">{{ deudor.comentarios }}</td>
+                            <td>{{ deudor.fecha_nueva_accion }}</td>
+                            <td>{{ deudor.hora_nueva_accion }}</td>
+                            <td>{{ deudor.nueva_accion }}</td>
+                            <td>{{ deudor.comentarios }}</td>
                                 
-                            <td>{{ deudor.total_insolutos }}</td>
-                            <td>{{ deudor.total_provisiones }}</td>
+                            <td>$ {{ deudor.total_insolutos|intcomma }}</td>
+                            <td>$ {{ deudor.total_provisiones|intcomma }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -177,99 +176,5 @@
         </div>
     </div>
 </div>
-
-<script>
-
-let table = document.getElementById('myTable'), cells = table.getElementsByTagName('td');
-for (let i=1,len=cells.length; i<len; i++){
-    let espace = " "
-    let z = cells[i].textContent
-    if (z.includes(espace) !== true){
-        let c = parseInt(z)
-        if (isNaN(c) !== true){
-            cells[i].textContent = "$" + c.toLocaleString('de-DE', { style: 'decimal', decimal: '3' })
-        }
-}
-}
-
-let one = document.getElementById("x").textContent;
-let two = parseInt(one);
-document.getElementById("x").textContent = "$" + two.toLocaleString('de-DE', { style: 'decimal', decimal: '3' });
-
-let ee = document.getElementById("y").textContent;
-let aa = parseInt(ee);
-document.getElementById("y").textContent = "$" + aa.toLocaleString('de-DE', { style: 'decimal', decimal: '3' });
-
-let bb = document.getElementById("z").textContent;
-let cc = parseInt(bb);
-document.getElementById("z").textContent = "$" + cc.toLocaleString('de-DE', { style: 'decimal', decimal: '3' });
-
-let zz = document.getElementById("w").textContent;
-let xx = parseInt(zz);
-document.getElementById("w").textContent = "$" + xx.toLocaleString('de-DE', { style: 'decimal', decimal: '3' });
-
-let ww = document.getElementById("q").textContent;
-let nn = parseInt(ww);
-document.getElementById("q").textContent = "$" + nn.toLocaleString('de-DE', { style: 'decimal', decimal: '3' });
-
-
-function sortTable(selector, compFunc) {
-      var mySelector = '.sortable';
-      var myCompFunc = function($td1, $td2, isAsc) {
-        var v1 = $.trim($td1.text()).replace(/,|\s+|%/g, '');
-        var v2 = $.trim($td2.text()).replace(/,|\s+|%/g, '');
-        var pattern = /^\d+(\.\d*)?$/;
-        if (pattern.test(v1) && pattern.test(v2)) {
-          v1 = parseFloat(v1);
-          v2 = parseFloat(v2);
-        }
-
-        return isAsc ? v1 > v2 : v1 < v2;
-      };
-
-      var doSort = function($tbody, index, compFunc, isAsc)
-      {
-        var $trList = $tbody.find("tr");
-        var len = $trList.length;
-        for(var i=0; i<len-1; i++) {
-          for(var j=0; j<len-i-1; j++) {
-            var $td1 = $trList.eq(j).find("td").eq(index);
-            var $td2 = $trList.eq(j+1).find("td").eq(index);
-
-            if (compFunc($td1, $td2, isAsc)) {
-              var t = $trList.eq(j+1);
-              $trList.eq(j).insertAfter(t);
-              $trList = $tbody.find("tr");
-            }
-          }
-        }
-      }
-
-      var init = function() {
-        var $th = $("th" + selector);
-        this.$table = $th.closest("table");
-        var that = this;
-        $th.click(function(){
-          var index = $(this).index();
-          var asc = $(this).attr('data-asc');
-          isAsc = asc === undefined ? true : (asc > 0 ? true : false);
-
-          doSort(that.$table.find("tbody"), index, compFunc, isAsc);
-
-          $(this).attr('data-asc', 1 - (isAsc ? 1 : 0));
-        });
-
-        $th.css({'cursor': 'pointer'})
-           .attr('title', 'Haga clic para ordenar')
-           .append('&nbsp;<i class="fa fa-long-arrow-down" style="color:#2196F3" aria-hidden="true"></i><i class="fa fa-long-arrow-up" style="color:#2196F3" aria-hidden="true"></i>');
-      };
-
-
-      selector = selector || mySelector;
-      compFunc = compFunc || myCompFunc;
-
-      init();
-    }
-</script>
 
 {% endblock content %}

@@ -13,7 +13,7 @@ class GestionForm(forms.ModelForm):
         fields = (
             'user', 'deudores','persona_contactada', 'nombre_parentesco', 'tipo_gestion', 'resultado_gestion', 'observaciones',
             'causales_no_pago', 'califiacion_viabilidad', 'fecha_nueva_accion', 'nueva_accion','hora_nueva_accion', 'comentarios',
-            'estado_acuerdo_pago', 'castigada', 'evidencia',
+            'evidencia',
         )
 
         widgets = {
@@ -47,12 +47,6 @@ class GestionForm(forms.ModelForm):
                     'class': 'input-group-field',
                 }
             ),
-            'estado_acuerdo_pago':forms.Select(
-                attrs={
-                    'class': 'input-group-field',
-                }
-            ),
-            
         }
         
 
@@ -70,9 +64,17 @@ class AddInfoForm(forms.ModelForm):
 
 class MailForm(forms.Form):
 
+    carta_choices = (
+        ("0", ""),
+        ("1", "carta 1 deudor"),
+        ("3", "carta  deudor"),
+        ("2", "carta 3 deudor"),
+    )
+
     subject = forms.CharField(max_length=200, label = 'Asunto:')
-    message = forms.CharField(label = 'Mensaje:', widget = forms.Textarea,)
+    message = forms.CharField(label = 'Mensaje:', widget = forms.Textarea, required = False)
     de = forms.EmailField()
     pass_de = forms.PasswordInput()
     para = forms.EmailField(label = 'Para:')
-    
+    cc = forms.EmailField(label = 'CC:', required = False)
+    carta = forms.ChoiceField(choices = carta_choices)

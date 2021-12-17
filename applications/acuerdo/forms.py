@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import fields
 
 from applications.acuerdo.models import AcuerdosPago
 
@@ -36,3 +37,9 @@ class AcuerdoForm(forms.ModelForm):
                 },
             ),
         }
+
+
+class AcuedoActualizacion(forms.ModelForm):
+    class Meta:
+        model = AcuerdosPago
+        fields = ('estado_del_acuerdo', )

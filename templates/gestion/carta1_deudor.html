@@ -2,8 +2,10 @@
 
 {% load static %}
 
+{% load humanize %}
 
 {% block content %}
+
 <style>
     p, th, td{
         font-size: large;
@@ -37,22 +39,22 @@
 <p>El estado de sus obligaciones a la fecha de corte es:</p>
 
 <br>
-<table>
+<table style="border: 1px solid black; padding: 0.5em;">
     <thead>
         <tr>
-            <th>Código del crédito</th>
-            <th>Saldo insoluto</th>
-            <th>Días de mora</th>
-            <th>Pago mínimo (estar al día)</th>
+            <th>Crédito</th>
+            <th>Saldo</th>
+            <th>Mora</th>
+            <th>Pago mínimo</th>
         </tr>
     </thead>
     <tbody>
         {% for credito in creditos %}
         <tr>
             <td>{{credito.codigo_credito}}</td>
-            <td>{{credito.saldo_insoluto}}</td>
+            <td>$ {{credito.saldo_insoluto|intcomma}}</td>
             <td>{{credito.dias_mora}}</td>
-            <td>{{credito.pago_min_estar_al_dia}}</td>
+            <td>$ {{credito.pago_min_estar_al_dia|intcomma}}</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -67,6 +69,7 @@
 <br>
 <br>
 <p>Gerente de Sede</p>
+
 
 {% endblock content %}
     

@@ -25,4 +25,10 @@ urlpatterns = [
 
     path(route = 'email/<int:pk>', view = views.EmailSend.as_view(), name = 'email'),
 
+    path(route = 'actualizacionAcuerdo/<int:pk>', view = views.AcuerdoPagoIncumplido.as_view(), name='actuaAcuerdo'),
+
+    path(route = 'actualizacionAcuerdo2/<int:pk>', view = views.AcuerdoPagoCumplido.as_view(), name='actuaAcuerdo2'),
+
+    path(route = 'castigoCartera/<int:pk>', view = views.CastigarCartera.as_view(), name='castigada'),
+
 ]

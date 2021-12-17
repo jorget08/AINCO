@@ -2,6 +2,8 @@
 
 {% load static %}
 
+{% load humanize %}
+
 {% block body-content %}
 <br>
 <style>
@@ -148,10 +150,12 @@
 </div>
     <br>
     <br>
-    <h5>Liquidación de cartera</h5>
-    <table id="creditoTable">
- 
+    <table>
+        
         <thead>
+            <tr>
+                <th colspan="3">Liquidación de cartera</th>
+            </tr>
             <tr>
                 <th>Fecha de corte</th>
                 <th>Codigo del crédito</th>
@@ -173,17 +177,17 @@
             {% for credito in credito %}
             <tr>
                 <td>{{credito.fecha_corte}}</td>
-                <td>{{credito.codigo_credito}}</td>
+                <td>{{credito.codigo_credito|intcomma}}</td>
                 <td>{{credito.linea_credito}}</td>
                 <td>{{credito.dias_mora}}</td>
-                <td class="ali">{{credito.pago_min_estar_al_dia}}</td>
-                <td class="ali">{{credito.pago_total}}</td>
-                <td class="ali">{{credito.pago_min_liberar_provision}}</td>
-                <td class="ali">{{credito.valor_total_provision}}</td>
+                <td>$ {{credito.pago_min_estar_al_dia|intcomma}}</td>
+                <td>$ {{credito.pago_total|intcomma}}</td>
+                <td>$ {{credito.pago_min_liberar_provision|intcomma}}</td>
+                <td>$ {{credito.valor_total_provision|intcomma}}</td>
                 <td>{{credito.dia_corte}}</td>
-                <td class="ali">{{credito.saldo_cuenta_ahorros}}</td>
-                <td class="ali">{{credito.valor_credito}}</td>
-                <td class="ali">{{credito.saldo_insoluto}}</td>
+                <td>$ {{credito.saldo_cuenta_ahorros|intcomma}}</td>
+                <td>$ {{credito.valor_credito|intcomma}}</td>
+                <td>$ {{credito.saldo_insoluto|intcomma}}</td>
             </tr>
             {% endfor %}
             <tr>
@@ -204,7 +208,7 @@
     </table>
     <br>
     <br>
-    <table id="pagosTable">
+    <table>
          
         <thead>
             <tr>
@@ -224,19 +228,19 @@
             </tr>
         </thead>
         
-        {% for pago in pagos %}
+        {% for pago in pagos|slice:"4" %}
         <tbody>
             <tr>
                 <td>{{pago.fecha_pago}}</td>
                 <td>{{pago.tipo_pago_aplicado}}</td>
                 <td>{{pago.forma_pago}}</td>
-                <td class="ali">{{pago.valor_pago}}</td>
-                <td class="ali">{{pago.no_recibo_pago}}</td>
-                <td class="ali">{{pago.valor_abono_saldo_credito}}</td>
-                <td class="ali">{{pago.valor_abono_intereses_corrientes}}</td>
-                <td class="ali">{{pago.valor_abono_intereses_moratorios}}</td>
-                <td class="ali">{{pago.valor_gastos_cobranza}}</td>
-                <td class="ali">{{pago.valor_abono_honorarios}}</td>
+                <td>$ {{pago.valor_pago|intcomma}}</td>
+                <td>$ {{pago.no_recibo_pago|intcomma}}</td>
+                <td>$ {{pago.valor_abono_saldo_credito|intcomma}}</td>
+                <td>$ {{pago.valor_abono_intereses_corrientes|intcomma}}</td>
+                <td>$ {{pago.valor_abono_intereses_moratorios|intcomma}}</td>
+                <td>$ {{pago.valor_gastos_cobranza|intcomma}}</td>
+                <td>$ {{pago.valor_abono_honorarios|intcomma}}</td>
         </tbody>
         {% endfor %}
     </table>
@@ -244,43 +248,61 @@
     <br>
     <br>
 
-        <table id="acuerdosTable">
+        <table>
             <thead>
                 <tr>
-                    <th>Acuerdos de pago</th>
+                    <th colspan="2">Acuerdo de pago</th>
                 </tr>
                 <tr>
-                    <th>Fecha de compromiso</th>
-                    <th>valor de compromiso</th>
+                    <th>Fecha 1 </th>
+                    <th>valor 1 </th>
+                    <th>Fecha 2 </th>
+                    <th>valor 2 </th>
+                    <th>Fecha 3 </th>
+                    <th>valor 3</th>
                     <th>Forma de pago</th>
+                    <th>Estado</th>
+                    <th>Cumplimiento</th>
                 </tr>
             </thead>
             {% for a in acuerdo_pago %}
             <tbody>
                 <tr>
                     <td>{{a.fecha_1}}</td>
-                    <td class="ali">{{a.valor_compromiso}}</td>
+                    <td>$ {{a.valor_compromiso|intcomma}}</td>
+                    {% if a.fecha_2 != None %}
+                        <td>{{a.fecha_2}}</td>
+                        <td>$ {{a.valor_compromiso_2|intcomma}}</td>
+                    {% else %}
+                        <td></td>
+                        <td></td>
+                    {% endif %}
+                    {% if a.fecha_3 != None %}
+                        <td>{{a.fecha_3}}</td>
+                        <td>$ {{a.valor_compromiso_3|intcomma}}</td>
+                    {% else %}
+                        <td></td>
+                        <td></td>
+                    {% endif %}
                     <td>{{a.forma_pago}}</td>
+                    <td>{{a.estado_del_acuerdo}}</td>
+                    <td>
+                    <div class="grid-x grid-margin-x">
+                    <form method="post" action="{% url 'gestion:actuaAcuerdo' deudor.pk %}" class="cell small-6">
+                        <input type="hidden" name="deudores" value="{{ deudor.pk }}" />
+                        {% csrf_token %}
+                            <button type="submit" class="button success"><i class="fi-x"></i></button>
+                    </form>
+                        <form method="post" action="{% url 'gestion:actuaAcuerdo2' deudor.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="button success"><i class="fi-check"></i></button>  
+                        </form>
+                    </div>
+                    </td>
                 </tr>
-                
-                {% if a.fecha_2 != None %}
-                      
-                <tr>
-                    <td>{{a.fecha_2}}</td>
-                    <td class="ali">{{a.valor_compromiso_2}}</td>
-                    <td>{{a.forma_pago}}</td>
-                </tr>
-                {% endif %}
-
-                {% if a.fecha_3 != None %}
-                <tr>
-                    <td>{{a.fecha_3}}</td>
-                    <td class="ali">{{a.valor_compromiso_3}}</td>
-                    <td>{{a.forma_pago}}</td>
-                </tr>
-                {% endif %}
             </tbody>
             {% endfor %}
+            
         </table>
         
     
@@ -420,20 +442,6 @@
                 </div>
 
                 <div class="cell medium-4">
-                    <label><strong>Solo</strong> en caso de tener un acuerdo de pago:</label>
-                    <label>Cumplimiento acuerdo de pago:</label>
-                    <div class="input-group">
-                        {{ form.estado_acuerdo_pago }}
-                    </div>
-                </div>
-                <div class="cell medium-4">
-                    <label><strong>Solo</strong> en caso de cartera castigada:</label>
-                    <label>Marcar para indicar que la cartera fue castigada</label>
-                    <div class="input-group">
-                        {{ form.castigada }}
-                    </div>
-                </div>
-                <div class="cell medium-4">
                     <label>Evidencia de gestion: </label>
                     <div class="input-group">
                         {{form.evidencia}}
@@ -449,6 +457,21 @@
 
             </form>
         </div>
+    </div>
+</div>
+<div class="grid-container align-center">
+    <div class="grid-x grid-padding-x align-center bordered">
+        <form action="{% url 'gestion:castigada' deudor.pk %}" class="cell medium-3 grid-x grid-margin-x" 
+        method="POST" style="border: 5px solid red; border-radius: 10px;">
+            {% csrf_token %}
+            <h5 class="cell" style="margin-bottom: 1em; text-align: center;">CASTIGAR CARTERA</h5>
+            <div class="cell">
+                <p>=======> {{ castigada.castigado }} Castigar</p>
+            </div>
+            <div class="cell">
+                <button type="submit" class="button success" style="width: 210px;">Castigar</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -543,54 +566,18 @@
             <label>Mensaje:</label>
             {{formulario.message}}
         </div>
+        <div class="cell medium-12">
+            <label>Con copia a:</label>
+            {{formulario.cc}}
+        </div>
+        <div class="cell medium-12">
+            <label>Si desea enviar una carta al deudor, seleccionela:</label>
+            {{formulario.carta}}
+        </div>
         <button type="submit" class="cell success button">Enviar correo</button>
         
     </form>
 </div>
-<script>
 
-let table = document.getElementById('creditoTable'), cells = table.getElementsByTagName('td');
-for (let i=1,len=cells.length; i<len; i++){
-    let espace = " "
-    let z = cells[i].textContent
-    if (z.includes(espace) !== true){
-        let c = parseInt(z)
-        if (isNaN(c) !== true){
-            if (i === 1 || i === 3 || i === 8 || i === 13 || i === 15 || i === 20 ||
-                i === 25 || i === 27 || i === 32 || i === 37 || i === 39 || i === 44 ||
-                i === 49 || i === 51 || i === 56 || i === 61 || i === 63 || i === 68 ||
-                i === 73 || i === 75 || i === 80 || i === 85 || i === 87 || i === 92){
-                cells[i].textContent =  c.toLocaleString('de-DE', { style: 'decimal', decimal: '3' })
-            }
-            else{
-                cells[i].textContent = "$" + c.toLocaleString('de-DE', { style: 'decimal', decimal: '3' })
-            }
-        }
-    }
-}
-let table2 = document.getElementById('pagosTable'), cells2 = table2.getElementsByTagName('td');
-for (let i=1,len=cells2.length; i<len; i++){
-    let espace = " "
-    let z = cells2[i].textContent
-    if (z.includes(espace) !== true){
-        let c = parseInt(z)
-        if (isNaN(c) !== true){
-            cells2[i].textContent = "$" + c.toLocaleString('de-DE', { style: 'decimal', decimal: '3' })
-        }
-    }
-}
-let table3 = document.getElementById('acuerdosTable'), cells3 = table3.getElementsByTagName('td');
-for (let i=1,len=cells3.length; i<len; i++){
-    let espace = " "
-    let z = cells3[i].textContent
-    if (z.includes(espace) !== true){
-        let c = parseInt(z)
-        if (isNaN(c) !== true){
-            cells3[i].textContent = "$" + c.toLocaleString('de-DE', { style: 'decimal', decimal: '3' })
-        }
-    }
-}
-
-</script>
 
 {% endblock body-content %}

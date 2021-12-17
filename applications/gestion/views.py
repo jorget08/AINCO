@@ -14,7 +14,7 @@ from django.template import loader
 
 from .models import Gestion
 from .forms import GestionForm, AddInfoForm, MailForm
-from applications.acuerdo.forms import AcuerdoForm
+from applications.acuerdo.forms import AcuerdoForm, AcuedoActualizacion
 from applications.acuerdo.models import AcuerdosPago
 from applications.deudor.models import Deudor
 from applications.credito.models import Credito
@@ -23,6 +23,8 @@ from applications.conyugue.models import Conyugue
 from applications.users.models import User
 from applications.pago.models import Pagos
 from applications.correos.tasks import send_mail_task
+from applications.deudor.forms import CastigadaForm
+
 
 #PDF
 from applications.utils import render_to_pdf
@@ -72,7 +74,8 @@ class GestionView(LoginRequiredMixin, generic.CreateView):
         context['acuerdo_pago'] = AcuerdosPago.objects.filter(deudores = deudor)
         context['acuerdo'] = AcuerdoForm
         context['formulario'] = MailForm
-
+        context['castigada'] = CastigadaForm
+        
         #usuario = self.request.user
         #context['total_estar_al_dia'] = Deudor.objects.total_estar_al_dia(usuario)
         
@@ -141,6 +144,7 @@ class AcuerdoView2(LoginRequiredMixin, generic.CreateView):
                 'fecha_3': None,
                 'valor_compromiso_2': None,
                 'valor_compromiso_3' : None,
+                'estado_del_acuerdo' : 'En proceso',
                 'user': self.request.user,
                 'deudores': deudor,
             }
@@ -164,6 +168,7 @@ class AcuerdoView2(LoginRequiredMixin, generic.CreateView):
                 'fecha_3': None,
                 'valor_compromiso_2': self.request.POST.get('valor_compromiso_2'),
                 'valor_compromiso_3' : None,
+                'estado_del_acuerdo' : 'En proceso',
                 'user': self.request.user,
                 'deudores': deudor,
             }
@@ -187,6 +192,7 @@ class AcuerdoView2(LoginRequiredMixin, generic.CreateView):
                 'fecha_3': self.request.POST.get('fecha_3'),
                 'valor_compromiso_2': self.request.POST.get('valor_compromiso_2'),
                 'valor_compromiso_3' : self.request.POST.get('valor_compromiso_3'),
+                'estado_del_acuerdo' : 'En proceso',
                 'user': self.request.user,
                 'deudores': deudor,
             }
@@ -198,7 +204,84 @@ class AcuerdoView2(LoginRequiredMixin, generic.CreateView):
                 )
             )
 
+
+class CastigarCartera(LoginRequiredMixin, generic.UpdateView):
     
+    form_class = CastigadaForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['user'] = self.request.user
+        context['deudor'] = Deudor.objects.get(cedula=self.kwargs['pk'])
+        return context
+
+    def post(self, request, *args, **kwargs):
+        #import pdb; pdb.set_trace()
+        deudor = Deudor.objects.get(cedula=self.kwargs['pk'])
+        if self.request.POST.get('castigado') == 'on':
+            deudor.castigado = True
+            deudor.save()
+
+        return HttpResponseRedirect(
+                reverse(
+                    'gestion:gestion',
+                    kwargs={'pk': deudor.pk}
+                )
+            )
+    
+class AcuerdoPagoIncumplido(LoginRequiredMixin, generic.UpdateView):
+
+    form_class = AcuedoActualizacion
+
+    #model = AcuerdosPago
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['user'] = self.request.user
+        context['deudor'] = Deudor.objects.get(cedula=self.kwargs['pk'])
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        #import pdb; pdb.set_trace()
+        deudor = Deudor.objects.get(cedula=self.kwargs['pk'])
+        acuerdo = AcuerdosPago.objects.filter(deudores = deudor).update(estado_del_acuerdo= 'Incumplido')
+        
+        return HttpResponseRedirect(
+                reverse(
+                    'gestion:gestion',
+                    kwargs={'pk': deudor.pk}
+                )
+            )
+
+
+class AcuerdoPagoCumplido(LoginRequiredMixin, generic.UpdateView):
+
+    form_class = AcuedoActualizacion
+
+    #model = AcuerdosPago
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['user'] = self.request.user
+        context['deudor'] = Deudor.objects.get(cedula=self.kwargs['pk'])
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        #import pdb; pdb.set_trace()
+        deudor = Deudor.objects.get(cedula=self.kwargs['pk'])
+        acuerdo = AcuerdosPago.objects.filter(deudores = deudor).update(estado_del_acuerdo= 'Cumplido')
+        
+        return HttpResponseRedirect(
+                reverse(
+                    'gestion:gestion',
+                    kwargs={'pk': deudor.pk}
+                )
+            )
+
+            
 
 class EmailSend(LoginRequiredMixin, generic.TemplateView):
 
@@ -212,7 +295,6 @@ class EmailSend(LoginRequiredMixin, generic.TemplateView):
       
     def post(self, request, *args, **kwargs):
         #import pdb; pdb.set_trace()
-        para = []
         deudor = Deudor.objects.get(cedula=self.kwargs['pk'])
         subject = self.request.POST.get('subject')
         para = self.request.POST.get('para')           
@@ -223,18 +305,40 @@ class EmailSend(LoginRequiredMixin, generic.TemplateView):
         passwdd = base64.b64decode(passw)
         passwd = passwdd.decode('ascii')
 
+        cc = self.request.POST.get("cc")
 
-        html_email = loader.render_to_string(
+        carta = self.request.POST.get("carta")
+
+        recipient_list=[para, cc]
+
+        if carta == "0":
+            send_mail(               
+            subject=subject,
+            message=message,
+            from_email=de,
+            recipient_list=[para],
+            auth_user=de,
+            auth_password=passwd,
+            )
+
+            return HttpResponseRedirect(
+                reverse(
+                    'gestion:gestion',
+                    kwargs={'pk': deudor.pk}
+                )
+            )
+
+        if carta == "1":
+            html_email = loader.render_to_string(
             'gestion/carta1_deudor.html',
             {
                 'deudor' : deudor,
                 'fecha' : date.today(),
                 'creditos': Credito.objects.filter(deudor = deudor).filter(normalizado = False)
             }
-        )    
+            )
 
-        #send_mail_task.delay(subject, message, de, para, passw, html_email)
-        send_mail(               
+            send_mail(               
             subject=subject,
             message=message,
             from_email=de,
@@ -242,9 +346,63 @@ class EmailSend(LoginRequiredMixin, generic.TemplateView):
             auth_user=de,
             auth_password=passwd,
             html_message=html_email,
-        )
+            )
 
-        return HttpResponseRedirect(
+            return HttpResponseRedirect(
+                reverse(
+                    'gestion:gestion',
+                    kwargs={'pk': deudor.pk}
+                )
+            )
+        
+        if carta == "2":
+            html_email = loader.render_to_string(
+            'gestion/carta2_deudor.html',
+            {
+                'deudor' : deudor,
+                'fecha' : date.today(),
+                'creditos': Credito.objects.filter(deudor = deudor).filter(normalizado = False)
+            }
+            )
+
+            send_mail(               
+            subject=subject,
+            message=message,
+            from_email=de,
+            recipient_list=[para],
+            auth_user=de,
+            auth_password=passwd,
+            html_message=html_email,
+            )
+
+            return HttpResponseRedirect(
+                reverse(
+                    'gestion:gestion',
+                    kwargs={'pk': deudor.pk}
+                )
+            )
+
+        if carta == "3":
+            html_email = loader.render_to_string(
+            'gestion/carta3_deudor.html',
+            {
+                'deudor' : deudor,
+                'fecha' : date.today(),
+                'creditos': Credito.objects.filter(deudor = deudor).filter(normalizado = False)
+            }
+            )
+
+            send_mail(
+            subject=subject,
+            message=message,
+            from_email=de,
+            recipient_list=[para],
+            auth_user=de,
+            auth_password=passwd,
+            html_message=html_email,
+            )
+
+            return HttpResponseRedirect(
                 reverse(
                     'gestion:gestion',
                     kwargs={'pk': deudor.pk}
