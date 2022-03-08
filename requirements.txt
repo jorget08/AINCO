@@ -45,7 +45,7 @@ PyTweening
 pytz
 PyYAML
 redis
-reportlab
+reportlab==3.5.67
 requests
 six
 soupsieve
