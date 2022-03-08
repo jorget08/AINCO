@@ -59,7 +59,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for deudor in deudores|dictsort:"fecha_nueva_accion" %}
+                    {% for deudor in deudores|dictsort:"total_insolutos" %}
                     <tr>
                         <td class="ali"><a href="{% url 'gestion:gestionAbogado' deudor.cedula %}">{{deudor.nombres}} {{deudor.apellidos}}</a></td>
 
@@ -85,11 +85,11 @@
                         {% for pagina in paginator.page_range %}
         
                         
-                        {% ifequal pagina page_obj.number %}
+                        {% if pagina == page_obj.number %}
                         <li class="current"><span class="show-for-sr">You're on page</span> {{ pagina }}</li>
                         {% else %}
                         <li class=""><a href="?page={{pagina}}">{{ pagina }}</a></li>
-                        {% endifequal %}
+                        {% endif %}
                         {% endfor %}
                         
                         {% if page_obj.has_next %}

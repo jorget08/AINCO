@@ -142,7 +142,7 @@ class DashboardAbogadoView(LoginRequiredMixin, generic.ListView):
     
     context_object_name = 'deudores'
 
-    paginate_by = 7
+    paginate_by = 11
     
     def get_queryset(self):
 
