@@ -155,7 +155,6 @@ class ForgotPswd(forms.ModelForm):
         }
         
 
-
 class AgendarForm(forms.ModelForm):
 
     class Meta:

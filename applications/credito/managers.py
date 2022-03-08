@@ -10,3 +10,7 @@ class CreditoManager(models.Manager):
             f = i.credito_deudor__saldo_insoluto
             lista.append(f)
         return lista
+
+    def num_creditos_vencidos(self, usuario):
+        return self.filter(vencido=True).filter(deudor__usuarios=usuario
+        ).filter(deudor__castigado=False).count()

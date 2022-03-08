@@ -1,5 +1,8 @@
 import base64
 
+from datetime import datetime
+from pdb import post_mortem
+
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic.edit import FormView
@@ -15,8 +18,8 @@ from .models import User
 from .forms import UserRegisterForm, LoginForm, UpdatePasswordForm, ForgotPswd, AgendarForm
 from applications.deudor.models import Deudor
 from applications.credito.models import Credito
-#from usuarios.models import Usuarios
-#from gestion.models import Gestion
+from applications.castigados.forms import CastigadosForm
+from applications.castigados.models import CastigoCartera
 
 
 class UserRegisterView(FormView):
@@ -35,7 +38,7 @@ class UserRegisterView(FormView):
             form.cleaned_data['email'],
             form.cleaned_data['password1'],
             full_name=form.cleaned_data['full_name'],
-            position=form.cleaned_data['position'],
+            ocupation=form.cleaned_data['ocupation'],
             genero=form.cleaned_data['genero'],
             date_birth=form.cleaned_data['date_birth'],
         )
@@ -57,9 +60,16 @@ class LoginView(FormView):
         return super(LoginView, self).form_valid(form)
         
     def get_success_url(self):
+        #import pdb; pdb.set_trace()
+
         if self.request.user.first_time == True:
             success_url = reverse_lazy('users:change-password')
             return success_url
+
+        elif self.request.user.ocupation == '4':
+            success_url = reverse_lazy('users:dashboardAbogado')
+            return success_url
+        
         else:
             success_url = reverse_lazy('users:agendar')
             return success_url
@@ -106,8 +116,8 @@ class DashboardView(LoginRequiredMixin, generic.ListView):
         context['normalizados'] = Deudor.objects.nomalizados(usuario)
         context['normalizados_saldos'] = Deudor.objects.nomalizados_saldo(usuario)
         context['porcentaje_gestionados_creditos'] = Deudor.objects.porcentaje_gestionados_creditos(usuario)
-        context['num_vencidos'] = self.request.user.contador_creditos_vencidos
-        context['insolutos_vencidos'] = self.request.user.total_insoluto_mes
+        context['num_vencidos'] = Credito.objects.num_creditos_vencidos(usuario)
+        context['insolutos_vencidos'] = Deudor.objects.total_insoluto_vencidos(usuario)
         context['normalizados_vencidos'] = Deudor.objects.nomalizados_vencidos(usuario)
         context['normalizados_vencidos_saldos'] = Deudor.objects.normalizados_vencidos_saldo(usuario)
         context['porcentaje_normalizados'] = Deudor.objects.porcentaje_normalizados(usuario)
@@ -123,6 +133,23 @@ class DashboardView(LoginRequiredMixin, generic.ListView):
         kword = self.request.GET.get("kword", '')
 
         resultado=Deudor.objects.listado(usuario, kword)
+
+        return resultado
+
+
+class DashboardAbogadoView(LoginRequiredMixin, generic.ListView):
+    template_name = 'users/dashboardAbogado.html'
+    
+    context_object_name = 'deudores'
+
+    paginate_by = 7
+    
+    def get_queryset(self):
+
+        usuario = self.request.user
+        kword = self.request.GET.get("kword", '')
+
+        resultado=Deudor.objects.listadoAbogado(usuario, kword)
 
         return resultado
 
@@ -160,7 +187,6 @@ class AgendarView(LoginRequiredMixin, FormView):
 
 
 
-
 class ChangePwd(LoginRequiredMixin, generic.FormView):
     template_name = 'users/change-pswd.html'
     form_class = UpdatePasswordForm
@@ -184,12 +210,6 @@ class ChangePwd(LoginRequiredMixin, generic.FormView):
             base64_bytes = base64.b64encode(pass_bytes)
             base64_string = base64_bytes.decode('ascii')
             usuario.pass_email = base64_string
-            
-            # passw_email = passw_email.encode()
-
-            #sal = bcrypt.gensalt()
-
-            #usuario.pass_email = bcrypt.hashpw(passw_email, sal)
             
             usuario.save()
 
@@ -216,3 +236,115 @@ class RecuPswd(generic.FormView):
         usuario.save()
         return super(RecuPswd, self).form_valid(form)
 
+
+class EntregaCarteraCastigada(generic.CreateView):
+    template_name = 'users/entrega_castigados.html'
+    form_class = CastigadosForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        usuario = self.request.user
+        context['deudores'] = Deudor.objects.castigados(usuario)
+        context['usuario'] = usuario
+
+        return context
+
+    def from_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def post(self, request, *args, **kwargs):
+        #import pdb; pdb.set_trace()
+        deudor = Deudor.objects.get(cedula=request.POST['deudor'])
+        
+        if len(request.FILES) == 6:
+            CastigoCartera.objects.create(
+                archivo = request.FILES['archivo'],
+                archivo2 = request.FILES['archivo2'],
+                archivo3 = request.FILES['archivo3'],
+                archivo4 = request.FILES['archivo4'],
+                archivo5 = request.FILES['archivo5'],
+                archivo6 = request.FILES['archivo6'],
+                calificacion_viabilidad = request.POST['calificacion_viabilidad'],
+                observaciones = request.POST['observaciones'],
+                usuario = self.request.user,
+                deudor = deudor
+            )
+        
+        elif len(request.FILES) == 5:
+            CastigoCartera.objects.create(
+                archivo = request.FILES['archivo'],
+                archivo2 = request.FILES['archivo2'],
+                archivo3 = request.FILES['archivo3'],
+                archivo4 = request.FILES['archivo4'],
+                archivo5 = request.FILES['archivo5'],
+                archivo6 = request.POST['archivo6'],
+                calificacion_viabilidad = request.POST['calificacion_viabilidad'],
+                observaciones = request.POST['observaciones'],
+                usuario = self.request.user,
+                deudor = deudor
+            )
+        
+
+
+        elif len(request.FILES) == 4:
+            CastigoCartera.objects.create(
+                archivo = request.FILES['archivo'],
+                archivo2 = request.FILES['archivo2'],
+                archivo3 = request.FILES['archivo3'],
+                archivo4 = request.FILES['archivo4'],
+                archivo5 = request.POST['archivo5'],
+                archivo6 = request.POST['archivo6'],
+                calificacion_viabilidad = request.POST['calificacion_viabilidad'],
+                observaciones = request.POST['observaciones'],
+                usuario = self.request.user,
+                deudor = deudor
+            )
+
+        elif len(request.FILES) == 3:
+            CastigoCartera.objects.create(
+                archivo = request.FILES['archivo'],
+                archivo2 = request.FILES['archivo2'],
+                archivo3 = request.FILES['archivo3'],
+                archivo4 = request.POST['archivo4'],
+                archivo5 = request.POST['archivo5'],
+                archivo6 = request.POST['archivo6'],
+                calificacion_viabilidad = request.POST['calificacion_viabilidad'],
+                observaciones = request.POST['observaciones'],
+                usuario = self.request.user,
+                deudor = deudor
+            )
+
+        elif len(request.FILES) == 2:
+            CastigoCartera.objects.create(
+                archivo = request.FILES['archivo'],
+                archivo2 = request.FILES['archivo2'],
+                archivo3 = request.POST['archivo3'],
+                archivo4 = request.POST['archivo4'],
+                archivo5 = request.POST['archivo5'],
+                archivo6 = request.POST['archivo6'],
+                calificacion_viabilidad = request.POST['calificacion_viabilidad'],
+                observaciones = request.POST['observaciones'],
+                usuario = self.request.user,
+                deudor = deudor
+            )
+
+        elif len(request.FILES) == 1:
+            CastigoCartera.objects.create(
+                archivo = request.FILES['archivo'],
+                archivo2 = request.POST['archivo2'],
+                archivo3 = request.POST['archivo3'],
+                archivo4 = request.POST['archivo4'],
+                archivo5 = request.POST['archivo5'],
+                archivo6 = request.POST['archivo6'],
+                calificacion_viabilidad = request.POST['calificacion_viabilidad'],
+                observaciones = request.POST['observaciones'],
+                usuario = self.request.user,
+                deudor = deudor
+            )
+        deudor.usuarios.set(request.POST['users'])
+        deudor.save()
+
+        return HttpResponseRedirect(reverse('users:castigo'))
+'''
+'''

@@ -14,6 +14,10 @@ from django.template import loader
 
 from .models import Gestion
 from .forms import GestionForm, AddInfoForm, MailForm
+from applications.gestionAbogado.forms import GestionAbogadoForm
+from applications.gestionAbogado.models import GestionAbogado
+from applications.actaDespacho.forms import ActaDespachoForm
+from applications.actaDespacho.models import ActaDespacho
 from applications.acuerdo.forms import AcuerdoForm, AcuedoActualizacion
 from applications.acuerdo.models import AcuerdosPago
 from applications.deudor.models import Deudor
@@ -87,6 +91,64 @@ class GestionView(LoginRequiredMixin, generic.CreateView):
         return context
 
 
+class GestionAbogadoView(LoginRequiredMixin, generic.CreateView):
+    
+    template_name = 'gestion/gestionAbogado.html'
+    
+    form_class = GestionAbogadoForm
+    
+    success_url = reverse_lazy('users:dashboardAbogado')
+    
+    def get_queryset(self):
+        
+        queryset = Deudor.objects.all()
+        
+        return queryset
+    
+    def get_slug_field(self):
+        
+        slug_field = 'cedula'
+        
+        return slug_field
+    
+    def get_slug_url_kwarg(self):
+        
+        slug_url_kwarg = 'cedula'
+        
+        return slug_url_kwarg
+    
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        deudor = self.get_object()
+        
+        context['gestion'] = Gestion.objects.filter(deudores = deudor).order_by('fecha_gestion')
+        context['conyugue'] = Conyugue.objects.filter(deudor = deudor)
+        context['credito'] = Credito.objects.filter(deudor = deudor).order_by('-fecha_corte')
+        context['codeudor'] = Codeudor.objects.filter(deudores = deudor)
+        context['gestion'] = Gestion.objects.filter(deudores = deudor)
+        context['pagos'] = Pagos.objects.filter(deudores = deudor).order_by('-fecha_pago')
+        context['deudor'] = Deudor.objects.get(cedula=self.kwargs['pk'])
+        context['acuerdo_pago'] = AcuerdosPago.objects.filter(deudores = deudor)
+        context['acuerdo'] = AcuerdoForm
+        context['formulario'] = MailForm
+        context['castigada'] = CastigadaForm
+        context['acta_despacho'] = ActaDespachoForm
+        context['acta'] = ActaDespacho.objects.filter(deudor = deudor)
+        context['actuaciones'] = GestionAbogado.objects.filter(deudores = deudor)
+        #usuario = self.request.user
+        #context['total_estar_al_dia'] = Deudor.objects.total_estar_al_dia(usuario)
+        
+        #Lamado de los campos que se modifican, llamandolos en el template por su .pk
+        context['user'] = self.request.user
+        context['deudo'] = deudor
+        
+        #import pdb; pdb.set_trace() #--> el debug
+        return context
+
+
+
 
 
 class AddInfo(LoginRequiredMixin, generic.CreateView):
@@ -108,6 +170,69 @@ class AddInfo(LoginRequiredMixin, generic.CreateView):
 
         #import pdb; pdb.set_trace()
         return context
+
+
+class ActaDespachoView(LoginRequiredMixin, generic.CreateView):
+
+    form_class = ActaDespachoForm
+    
+    success_url = reverse_lazy('users:dashboardAbogado')
+
+    def get_queryset(self):
+        
+        queryset = Deudor.objects.all()
+        
+        return queryset
+    
+    def get_slug_field(self):
+        
+        slug_field = 'cedula'
+        
+        return slug_field
+    
+    def get_slug_url_kwarg(self):
+        
+        slug_url_kwarg = 'cedula'
+        
+        return slug_url_kwarg
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["deudor"] = Deudor.objects.get(cedula=self.kwargs['pk'])
+        context['user'] = self.request.user
+        return context
+
+    def post(self, request, *args, **kwargs):
+        deudor = self.get_object()
+        ActaDespacho.objects.create(
+            fecha_acta = request.POST['fecha_acta'],
+            num_radicacion = request.POST['num_radicacion'],
+            clase_proceso = request.POST['clase_proceso'],
+            num_despacho = request.POST['num_despacho'],
+            nombre_despacho = request.POST['nombre_despacho'],
+            juez_o_magistrado = request.POST['juez_o_magistrado'],
+            direccions_despacho = request.POST['direccions_despacho'],
+            ciudad_despacho = request.POST['ciudad_despacho'],
+            tel_fijo = request.POST['tel_fijo'],
+            tel_fijo2 = request.POST['tel_fijo2'],
+            cel = request.POST['cel'],
+            cel2 = request.POST['cel2'],
+            email = request.POST['email'],
+            email2 = request.POST['email2'],
+            observaciones = request.POST['observaciones'],
+            comentarios = request.POST['comentarios'],
+            acta = request.FILES['acta'],
+            deudor = deudor,
+            user = self.request.user
+        )
+
+        return HttpResponseRedirect(
+                reverse(
+                    'gestion:gestionAbogado',
+                    kwargs={'pk': deudor.pk}
+                )
+            )
+    
 
 
 class MasInfoGestion(LoginRequiredMixin, generic.DetailView):

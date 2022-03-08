@@ -22,4 +22,8 @@ urlpatterns = [
     
     path(route = 'agendar', view =  views.AgendarView.as_view(), name = 'agendar'),
 
+    path(route = 'castigados', view =  views.EntregaCarteraCastigada.as_view(), name = 'castigo'),
+
+    path(route = 'dashboard/abogado', view =  views.DashboardAbogadoView.as_view(), name = 'dashboardAbogado'),
+
 ]

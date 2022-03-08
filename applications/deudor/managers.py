@@ -24,6 +24,14 @@ class DeudorManager(models.Manager):
         return consulta
 
     
+    def listadoAbogado(self, usuario, kword):
+        deudores = self.filter(usuarios=usuario)
+        consulta = deudores.order_by('fecha_nueva_accion', '-total_insolutos').exclude(fecha_nueva_accion=None).filter(
+            Q(nombres__icontains=kword) | Q(apellidos__icontains=kword) | Q(full_name__icontains=kword)
+        )
+        return consulta
+
+    
     def dedudores_dia(self,usuario):
         today = date.today()
         return self.filter(usuarios=usuario).filter(fecha_nueva_accion = today).filter(castigado=False).count()
@@ -103,8 +111,10 @@ class DeudorManager(models.Manager):
         deudores_gestionados = self.filter(usuarios=usuario).filter(
             castigado=False
             ).exclude(contador_gestiones = 0).count()
-
-        return round((deudores_gestionados*100)/deudores_mes, 2)
+        if deudores_mes == 0:
+            return 0
+        else:
+            return round((deudores_gestionados*100)/deudores_mes, 2)
 
 
     def porcentaje_gestionados_creditos(self, usuario):
@@ -187,6 +197,18 @@ class DeudorManager(models.Manager):
         normalizados_vencidos = self.filter(usuarios=usuario).filter(castigado=False).filter(
             Q(credito_deudor__vencido=True), Q(credito_deudor__dias_mora=0)
             ).count()
+        if vencidos == 0:
+            return 0
+        else:
+            return round((normalizados_vencidos*100)/vencidos, 2)
 
-        return round((normalizados_vencidos*100)/vencidos, 2)
 
+    def castigados(self, usuario):
+        deudores = self.filter(usuarios=usuario).filter(castigado=True)
+        return deudores
+
+
+    def total_insoluto_vencidos(self, usuario):
+        x = self.filter(usuarios=usuario).filter(castigado=False).filter(
+            credito_deudor__vencido=True).aggregate(sld_ins = Sum('credito_deudor__saldo_insoluto'))
+        return x['sld_ins']

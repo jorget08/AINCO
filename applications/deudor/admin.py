@@ -14,6 +14,6 @@ class DeudorResource(resources.ModelResource):
 
 class DeudorAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_class = DeudorResource
-    list_display = ('pk', 'cedula', 'full_name')
+    list_display = ('pk', 'cedula', 'full_name', 'castigado')
 
 admin.site.register(Deudor, DeudorAdmin)

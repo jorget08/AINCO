@@ -357,7 +357,8 @@
 
 <div class="grid-container align-center">
         <div class="grid-x grid-padding-x align-center bordered">
-            <form class="cell medium-12 grid-x grid-margin-x" method="POST" style="border: 5px solid #5ce1e6; border-radius: 10px;">
+            <form class="cell medium-12 grid-x grid-margin-x" method="POST" 
+            style="border: 5px solid #5ce1e6; border-radius: 10px;" enctype="multipart/form-data">
                 {% csrf_token %}
 
                 <input type="hidden" name="user" value="{{ user.pk }}" />
@@ -477,7 +478,7 @@
 
 <div class="reveal" id="acuerdoPago" data-reveal>
     <h3>Acuerdo De Pago</h3>
-    <form action="{% url 'gestion:acuerdo' deudor.pk %}" method="POST" class="grid-x grid-margin-x">
+    <form action="{% url 'gestion:acuerdo' deudor.pk %}" method="POST" class="grid-x grid-margin-x" enctype="multipart/form-data">
         {% csrf_token %}
         <button class="close-button" data-close aria-label="Close modal" type="button">
             <span aria-hidden="true">&times;</span>

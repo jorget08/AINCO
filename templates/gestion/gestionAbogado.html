@@ -1,0 +1,698 @@
+{% extends 'gestion/base_gestion_abogado.html' %}
+
+{% load static %}
+
+{% load humanize %}
+
+{% block body-content %}
+<br>
+<style>
+    th, td {
+        border: 2px solid #5ce1e6;
+    }
+    thead {
+        background-color: #00c2cb; color:white;
+    }
+    .ali {
+        text-align: right;
+    }
+    td {
+        text-align: center;
+    }
+</style>
+
+<div class="row">
+    <div class="columns">
+        <div class="table-scroll">
+            <table class="stack" style="border: 2px solid #00c2cb">
+                <thead>
+                    <tr>
+                        <th>Información general</th>
+                        <th>Nombre</th>
+                        <th>Codigo Crédito</th>
+                        <th>Telefono 1</th>
+                        <th>Telefono 2</th>
+                        <th>Celular 1</th>
+                        <th>Celular 2</th>
+                        <th>Email</th>
+                        <th>Telefono empresa</th>
+                        <th>Celular empresa</th>
+                        <th>Telefono añadido</th>
+                        <th>Celular añadido</th>
+                        <th>Email añadido</th>
+                        <th>Telefono empresa añadido</th>
+                        <th>Celular empresa añadido</th>
+                        <th>Añadir info</th>
+                        <th>Ver mas info</th>
+                    </tr>
+                </thead>
+        
+                <tbody>
+                    <tr>
+                        <th style="background-color: #00c2cb; color:white">Info deudor</th>
+                        <td>{{deudor.nombres}} {{deudor.apellidos}}</td>
+                        <td></td>
+                        <td>{{deudor.tel_fijo}}</td>
+                        <td>{{deudor.tel_fijo2}}</td>
+                        <td>{{deudor.celular}}<a href="https://api.whatsapp.com/send?phone=+57{{deudor.celular}}" target="_blank"><img src="static\img\wa.png" style="width:32px;height:32px;" alt="Wpp" title="Whatsapp"></a></td>
+                        {% if deudor.celular2 %}
+                        <td>{{deudor.celular2}}<a href="https://api.whatsapp.com/send?phone=+57{{deudor.celular2}}" target="_blank"><img src="static\img\wa.png" style="width:32px;height:32px;" alt="Wpp" title="Whatsapp"></a></td>
+                        {% else %}
+                        <td>{{deudor.celular2}}</td>    
+                        {% endif %}
+                        <td><button data-open="mail" style="cursor: pointer; color: blue" >{{deudor.correo}}</button></td>
+                        <!--Info empresa-->
+                        {% for empresa in deudor.empresa_set.all %}
+                            <td>{{empresa.tel_fijo}}</td>
+                            <td>{{empresa.celular}}</td>
+                        {% endfor %}
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <!--add-->
+                        <td><a href="{% url 'gestion:add-info' deudor.pk %}" target="_blank" class="button"><i class="fi-plus"></i></a></td>
+                        <td></td>
+                    </tr>   
+            
+                </tbody>
+                <tbody>
+                {% for conyugue in conyugue %}
+                    <tr>
+                        <th style="background-color: #00c2cb; color:white">Conyugue deudor</th>
+                        <td>{{conyugue.nombres}} {{conyugue.apellidos}}</td>
+                        <td></td>
+                        <td>{{conyugue.tel_fijo}}</td>
+                        <td>{{conyugue.tel_fijo2}}</td>
+                        <td>{{conyugue.celular}}<a href="https://api.whatsapp.com/send?phone=+57{{conyugue.celular}}" target="_blank"><img src="static\img\wa.png" style="width:32px;height:32px;"></a></td>
+                        {% if conyuge.celular2 %}
+                        <td>{{conyuge.celular2}}<a href="https://api.whatsapp.com/send?phone=+57{{conyugue.celular2}}" target="_blank"><img src="static\img\wa.png" style="width:32px;height:32px;"></a></td>
+                        {% else %}
+                        <td>{{conyuge.celular2}}</td>    
+                        {% endif %}
+                        <td><button data-open="mail" style="cursor: pointer; color: blue">{{conyugue.correo}}</button></td>
+                        {% for empresa in codeudor.empresa_set.all %}
+                            <td>{{empresa.tel_fijo}}</td>
+                            <td>{{empresa.celular}}</td>
+                        {% endfor %}
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <!--add-->
+                        <td><a class="button" target="_blank" href="{% url 'gestion:add-info' conyugue.pk %}"><i class="fi-plus"></i></a></td>
+                        <td></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+        
+                <tbody>
+                    {% for cre in credito %}
+                    {% for co in cre.codeudores.all %}
+                    <tr>
+                        <th style="background-color: #00c2cb; color:white">Codeudor deudor</th>
+                        <td>{{co.nombres}} {{co.apellidos}}</td>
+                        <td>{{cre.codigo_credito}}</td>
+                            <td>{{co.tel_fijo}}</td>
+                            <td>{{co.tel_fijo2}}</td>
+                            <td>{{co.celular}}<a href="https://api.whatsapp.com/send?phone=+57{{co.celular}}" target="_blank"><img src="static\img\wa.png" style="width:32px;height:32px;"></a></td>
+                            
+                            {% if co.celular2 %}
+                            <td>{{co.celular2}}<a href="https://api.whatsapp.com/send?phone=+57{{co.celular2}}" target="_blank"><img src="static\img\wa.png" style="width:32px;height:32px;"></a></td>
+                            {% else %}
+                            <td>{{co.celular2}}</td>    
+                            {% endif %}
+                                
+                            <td><button data-open="mail" style="cursor: pointer; color: blue">{{co.correo}}</button></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <!--add-->
+                            <td><a class="button" target="_blank" href="{% url 'gestion:add-info' co.pk %}"><i class="fi-plus"></i></a></td>
+                            <td></td>
+                        </tr>
+                        {% endfor %}
+                        {% endfor %}
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+    <br>
+    <br>
+    <table>
+        
+        <thead>
+            <tr>
+                <th colspan="3">Liquidación de cartera</th>
+            </tr>
+            <tr>
+                <th>Fecha de corte</th>
+                <th>Codigo del crédito</th>
+                <th>Linea de crédito</th>
+                <th>Dias mora</th>
+                <th>Pago mínimo (para estar al día)</th>
+                <th>Pago total del crédito</th>
+                <th>Pago mínimo para liberar provisión</th>
+                <th>Valor total de la provisión</th>
+                <th>Dias de corte</th>
+                <th>Saldo cuenta de ahorros</th>
+                <th>Valor inicial del préstamo</th>
+                <th>Saldo insoluto</th>
+            </tr>
+        </thead>
+        
+        
+        <tbody>
+            {% for credito in credito %}
+            <tr>
+                <td>{{credito.fecha_corte}}</td>
+                <td>{{credito.codigo_credito|intcomma}}</td>
+                <td>{{credito.linea_credito}}</td>
+                <td>{{credito.dias_mora}}</td>
+                <td>$ {{credito.pago_min_estar_al_dia|intcomma}}</td>
+                <td>$ {{credito.pago_total|intcomma}}</td>
+                <td>$ {{credito.pago_min_liberar_provision|intcomma}}</td>
+                <td>$ {{credito.valor_total_provision|intcomma}}</td>
+                <td>{{credito.dia_corte}}</td>
+                <td>$ {{credito.saldo_cuenta_ahorros|intcomma}}</td>
+                <td>$ {{credito.valor_credito|intcomma}}</td>
+                <td>$ {{credito.saldo_insoluto|intcomma}}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td>Totales</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="ali">{{deudor.total_estar_al_dia}}</td>
+                <td class="ali">{{deudor.total_credito}}</td>
+                <td class="ali">{{deudor.total_liberar_provision}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="ali">{{deudor.total_insolutos}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <br>
+    <table>
+         
+        <thead>
+            <tr>
+                <th colspan="3">Reporte de Pagos</th>
+            </tr>
+            <tr>
+                <th>Fecha de pago</th>
+                <th>Tipo de pago aplicado</th>
+                <th>Forma de pago</th>
+                <th>Valor del pago</th>
+                <th>No. del recibo de pago</th>
+                <th>Valor abono al saldo del crédito</th>
+                <th>Valor abono a intereses corrientes</th>
+                <th>Valor abono a intereses moratorios</th>
+                <th>Valor abono a gastos de cobranza</th>
+                <th>Valor abono a honorario</th>
+            </tr>
+        </thead>
+        
+        {% for pago in pagos|slice:"4" %}
+        <tbody>
+            <tr>
+                <td>{{pago.fecha_pago}}</td>
+                <td>{{pago.tipo_pago_aplicado}}</td>
+                <td>{{pago.forma_pago}}</td>
+                <td>$ {{pago.valor_pago|intcomma}}</td>
+                <td>$ {{pago.no_recibo_pago|intcomma}}</td>
+                <td>$ {{pago.valor_abono_saldo_credito|intcomma}}</td>
+                <td>$ {{pago.valor_abono_intereses_corrientes|intcomma}}</td>
+                <td>$ {{pago.valor_abono_intereses_moratorios|intcomma}}</td>
+                <td>$ {{pago.valor_gastos_cobranza|intcomma}}</td>
+                <td>$ {{pago.valor_abono_honorarios|intcomma}}</td>
+        </tbody>
+        {% endfor %}
+    </table>
+
+    <br>
+    <br>
+
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="2">Acuerdo de pago</th>
+                </tr>
+                <tr>
+                    <th>Fecha 1 </th>
+                    <th>valor 1 </th>
+                    <th>Fecha 2 </th>
+                    <th>valor 2 </th>
+                    <th>Fecha 3 </th>
+                    <th>valor 3</th>
+                    <th>Forma de pago</th>
+                    <th>Estado</th>
+                    <th>Cumplimiento</th>
+                </tr>
+            </thead>
+            {% for a in acuerdo_pago %}
+            <tbody>
+                <tr>
+                    <td>{{a.fecha_1}}</td>
+                    <td>$ {{a.valor_compromiso|intcomma}}</td>
+                    {% if a.fecha_2 != None %}
+                        <td>{{a.fecha_2}}</td>
+                        <td>$ {{a.valor_compromiso_2|intcomma}}</td>
+                    {% else %}
+                        <td></td>
+                        <td></td>
+                    {% endif %}
+                    {% if a.fecha_3 != None %}
+                        <td>{{a.fecha_3}}</td>
+                        <td>$ {{a.valor_compromiso_3|intcomma}}</td>
+                    {% else %}
+                        <td></td>
+                        <td></td>
+                    {% endif %}
+                    <td>{{a.forma_pago}}</td>
+                    <td>{{a.estado_del_acuerdo}}</td>
+                    <td>
+                    <div class="grid-x grid-margin-x">
+                    <form method="post" action="{% url 'gestion:actuaAcuerdo' deudor.pk %}" class="cell small-6">
+                        <input type="hidden" name="deudores" value="{{ deudor.pk }}" />
+                        {% csrf_token %}
+                            <button type="submit" class="button success"><i class="fi-x"></i></button>
+                    </form>
+                        <form method="post" action="{% url 'gestion:actuaAcuerdo2' deudor.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="button success"><i class="fi-check"></i></button>  
+                        </form>
+                    </div>
+                    </td>
+                </tr>
+            </tbody>
+            {% endfor %}
+            
+        </table>
+        
+    
+    <br>
+    <br>
+
+    <table>
+        <thead>
+            <tr>
+                <td colspan="3">Gestiones Realizadas</td>
+            </tr>
+            <tr>
+                <th>Fecha contacto</th>
+                <th>Usuario</th>
+                <th>Persona contactada</th>
+                <th>Nombre y/o parentesco</th>
+                <th>Tipo de gestion</th>
+                <th>Resultado de gestion</th>
+                <th>Causal de no pago</th>
+                <th>Calificación de viabilidad</th>
+                <th>Nueva acción</th>
+                <th>observaciones</th>
+            </tr>
+        </thead>
+        {% for gestion in gestion|dictsortreversed:"fecha_gestion"|slice:"3" %}
+        <tbody>
+            <tr>
+                <td>{{gestion.fecha_gestion}}</td>
+                <td>{{gestion.user.username}}</td>
+                <td>{{gestion.get_persona_contactada}}</td>
+                <td>{{gestion.nombre_parentesco}}</td>
+                <td>{{gestion.get_tipo_gestion}}</td>
+                <td>{{gestion.get_resultado_gestion}}</td>
+                <td>{{gestion.get_causales_no_pago}}</td>
+                <td>{{gestion.get_califiacion_viabilidad}}</td>
+                <td>{{gestion.get_nueva_accion}}</td>
+                <td>{{gestion.observaciones}}</td>
+            </tr>
+        </tbody>
+        {% endfor %}
+        
+    </table>
+
+    <br>
+    <br>
+
+    <table>
+        <thead>
+            <tr>
+                <td colspan="3">Acta de Reparto</td>
+            </tr>
+            <tr>
+                <th>Fecha acta</th>
+                <th>Num radicación</th>
+                <th>Clase de proceso</th>
+                <th>Num de despacho</th>
+                <th>Nombre despacho</th>
+                <th>Direccion despacho</th>
+                <th>Ciudad</th>
+                <th>Teléfono</th>
+                <th>Celular</th>
+                <th>Correo</th>
+                <th>Observaciones</th>
+                <th>Comentarios</th>
+                <th>Evidencia</th>
+            </tr>
+        </thead>
+        {% for a in acta|slice:"1" %}
+        <tbody>
+            <tr>
+                <td>{{a.fecha_acta}}</td>
+                <td>{{a.num_radicacion}}</td>
+                <td>{{a.clase_proceso}}</td>
+                <td>{{a.num_despacho}}</td>
+                <td>{{a.nombre_despacho}}</td>
+                <td>{{a.direccions_despacho}}</td>
+                <td>{{a.ciudad_despacho}}</td>
+                <td>{{a.tel_fijo}}</td>
+                <td>{{a.cel}}</td>
+                <td>{{a.email}}</td>
+                <td>{{a.observaciones}}</td>
+                <td>{{a.comentarios}}</td>
+                <td><a href="{{a.acta.url}}" target="_blank">Acta</a></td>
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+
+    <br>
+    <br>
+
+    <table>
+        <thead>
+            <tr>
+                <td colspan="3">Actuaciones Procesales</td>
+            </tr>
+            <tr>
+                <th>Fecha actuación</th>
+                <th>Calificaxión viabilidad</th>
+                <th>Observaciones</th>
+                <th>Archivo adjunto</th>
+                <th>Archivo adjunto</th>
+                <th>Archivo adjunto</th>
+                <th>Archivo adjunto</th>
+                <th>Archivo adjunto</th>
+                <th>Archivo adjunto</th>
+            </tr>
+        </thead>
+        {% for actuacion in actuaciones|dictsortreversed:"fecha_gestionAbogado"|slice:"3" %}
+        <tbody>
+            <tr>
+                <td>{{actuacion.fecha_gestionAbogado}}</td>
+                <td>{{actuacion.califiacion_viabilidad}}</td>
+                <td>{{actuacion.observaciones}}</td>
+                {% if actuacion.archivo %}
+                <td><a href="{{actuacion.archivo.url}}" target="_blank">Archivo</a></td>
+                {% else %}
+                <td></td>
+                {% endif %}
+                {% if actuacion.archivo2 %}
+                <td><a href="{{actuacion.archivo2.url}}" target="_blank">Archivo</a></td>
+                {% else %}
+                <td></td>
+                {% endif %}
+                {% if actuacion.archivo3 %}
+                <td><a href="{{actuacion.archivo3.url}}" target="_blank">Archivo</a></td>
+                {% else %}
+                <td></td>
+                {% endif %}
+                {% if actuacion.archivo4 %}
+                <td><a href="{{actuacion.archivo4.url}}" target="_blank">Archivo</a></td>
+                {% else %}
+                <td></td>
+                {% endif %}
+                {% if actuacion.archivo5 %}
+                <td><a href="{{actuacion.archivo5.url}}" target="_blank">Archivo</a></td>
+                {% else %}
+                <td></td>
+                {% endif %}
+                {% if actuacion.archivo6 %}
+                <td><a href="{{actuacion.archivo6.url}}" target="_blank">Archivo</a></td>
+                {% else %}
+                <td></td>
+                {% endif %}
+            </tr>
+        </tbody>
+        {% endfor %}
+        
+    </table>
+    
+</div>
+
+<br>
+<br>
+
+
+<!--FORMULARIO-->
+
+<div class="reveal" id="acuerdoPago" data-reveal>
+    <h3>Acuerdo De Pago</h3>
+    <form action="{% url 'gestion:acuerdo' deudor.pk %}" method="POST" class="grid-x grid-margin-x" enctype="multipart/form-data">
+        {% csrf_token %}
+        <button class="close-button" data-close aria-label="Close modal" type="button">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+        <input type="hidden" name="user" value="{{ user.pk }}" />
+        <input type="hidden" name="deudores" value="{{ deudo.pk }}" />
+
+        <div class="cell medium-6">
+            <label>Fecha compromiso:</label>
+            <div class="">
+                {{acuerdo.fecha_1}}
+            </div>
+        </div>
+
+        <div class="cell medium-6">
+            <label>Valor del compromiso:</label>
+            <div class="input-group">
+                {{acuerdo.valor_compromiso}}
+            </div>
+        </div>
+
+        <div class="cell medium-6">
+            <label>Fecha compromiso:</label>
+            <div class="">
+                {{acuerdo.fecha_2}}
+            </div>
+        </div>
+
+        <div class="cell medium-6">
+            <label>Valor del compromiso:</label>
+            <div class="input-group">
+                {{acuerdo.valor_compromiso_2}}
+            </div>
+        </div>
+
+        <div class="cell medium-6">
+            <label>Fecha compromiso:</label>
+            <div class="input-group">
+                {{acuerdo.fecha_3}}
+            </div>
+        </div>
+
+        <div class="cell medium-6">
+            <label>Valor del compromiso:</label>
+            <div class="input-group">
+              {{ acuerdo.valor_compromiso_3 }}
+            </div>
+        </div>
+
+        <div class="cell medium-6">
+            <label>Forma de pago:</label>
+            <div class="input-group">
+              {{ acuerdo.forma_pago }}
+            </div>
+        </div>
+        <div class="cell medium-6">
+            <label>Evidencia:</label>
+            <div class="input-group">
+              {{ acuerdo.evidencia }}
+            </div>
+        </div>
+
+        <button type="submit" class="cell success button">Guardar acuerdo</button>
+    </form>
+</div>
+
+<div class="reveal" id="mail" data-reveal>
+    <h3>Email</h3>
+    <form action="{% url 'gestion:email' deudor.pk %}" method="POST" class="grid-x grid-margin-x">
+        {% csrf_token %}
+        <button class="close-button" data-close aria-label="Close modal" type="button">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <input type="hidden" name="de" value="{{ user.email }}">
+        <input type="hidden" name="pass_de" value="{{ user.pass_email }}">
+        <div class="cell medium-8">
+            <label>Para:</label>
+            {{formulario.para}}
+        </div>
+        <div class="cell medium-12">
+            <label>Asunto:</label>
+            {{formulario.subject}}
+        </div>
+        <div class="cell medium-12">
+            <label>Mensaje:</label>
+            {{formulario.message}}
+        </div>
+        <div class="cell medium-12">
+            <label>Con copia a:</label>
+            {{formulario.cc}}
+        </div>
+        <div class="cell medium-12">
+            <label>Si desea enviar una carta al deudor, seleccionela:</label>
+            {{formulario.carta}}
+        </div>
+        <button type="submit" class="cell success button">Enviar correo</button>
+        
+    </form>
+</div>
+
+
+<div class="reveal" id="gestionAbogado" data-reveal>
+    <h3>Gestion</h3>
+    <form action="{% url 'gestion:gestionAbogado' deudor.pk %}" method="POST" class="grid-x grid-margin-x" enctype="multipart/form-data">
+        {% csrf_token %}
+        <button class="close-button" data-close aria-label="Close modal" type="button">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <input type="hidden" name="user" value="{{ user.pk }}" />
+        <input type="hidden" name="deudores" value="{{ deudo.pk }}" />
+        <div class="cell medium-8">
+            <label>Calificacion de viabilidad:</label>
+            {{form.califiacion_viabilidad}}
+        </div>
+        <div class="cell medium-6">
+            <label>Archivo adjunto:</label>
+            {{form.archivo}}
+        </div>
+        <div class="cell medium-6">
+            <label>Archivo adjunto:</label>
+            {{form.archivo2}}
+        </div>
+        <div class="cell medium-6">
+            <label>Archivo adjunto:</label>
+            {{form.archivo3}}
+        </div>
+        <div class="cell medium-6">
+            <label>Archivo adjunto:</label>
+            {{form.archivo4}}
+        </div>
+        <div class="cell medium-6">
+            <label>Archivo adjunto:</label>
+            {{form.archivo5}}
+        </div>
+        <div class="cell medium-6">
+            <label>Archivo adjunto:</label>
+            {{form.archivo6}}
+        </div>
+        <div class="cell medium-12">
+            <label>Observaciones:</label>
+            {{form.observaciones}}
+        </div>
+        <button type="submit" class="cell success button">Gestionar</button>
+        
+    </form>
+</div>
+
+
+<div class="reveal" id="actaDespacho" data-reveal>
+    <h3>Acta Despacho</h3>
+    <form action="{% url 'gestion:actaDespacho' deudor.pk %}" method="POST" class="grid-x grid-margin-x" enctype="multipart/form-data">
+        {% csrf_token %}
+        <button class="close-button" data-close aria-label="Close modal" type="button">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <input type="hidden" name="user" value="{{ user.pk }}" />
+        <input type="hidden" name="deudor" value="{{ deudor.pk }}" />
+        <div class="cell medium-6">
+            <label>Fecha del acta:</label>
+            <input type="date" name="fecha_acta" />
+        </div>
+        <div class="cell medium-6">
+            <label>Número de radicación:</label>
+            {{acta_despacho.num_radicacion}}
+        </div>
+        <div class="cell medium-6">
+            <label>Tipo de proceso:</label>
+            {{acta_despacho.clase_proceso}}
+        </div>
+        <div class="cell medium-6">
+            <label>Numero de despacho:</label>
+            {{acta_despacho.num_despacho}}
+        </div>
+        <div class="cell medium-6">
+            <label>Nombre del despacho:</label>
+            {{acta_despacho.nombre_despacho}}
+        </div>
+        <div class="cell medium-6">
+            <label>Nombre del Juez/Magstrado:</label>
+            {{acta_despacho.juez_o_magistrado}}
+        </div>
+        <div class="cell medium-6">
+            <label>Dirección de despacho:</label>
+            {{acta_despacho.direccions_despacho}}
+        </div>
+        <div class="cell medium-6">
+            <label>Ciudad del despacho:</label>
+            {{acta_despacho.ciudad_despacho}}
+        </div>
+        <div class="cell medium-6">
+            <label>Teléfono fijo:</label>
+            {{acta_despacho.tel_fijo}}
+        </div>
+        <div class="cell medium-6">
+            <label>Teléfono fijo 2:</label>
+            {{acta_despacho.tel_fijo2}}
+        </div>
+        <div class="cell medium-6">
+            <label>Celular:</label>
+            {{acta_despacho.cel}}
+        </div>
+        <div class="cell medium-6">
+            <label>Celular 2:</label>
+            {{acta_despacho.cel2}}
+        </div>
+        <div class="cell medium-6">
+            <label>Email:</label>
+            {{acta_despacho.email}}
+        </div>
+        <div class="cell medium-6">
+            <label>Email 2:</label>
+            {{acta_despacho.email2}}
+        </div>
+        <div class="cell medium-6">
+            <label>Observaciones:</label>
+            {{acta_despacho.observaciones}}
+        </div>
+        <div class="cell medium-6">
+            <label>Comentarios:</label>
+            {{acta_despacho.comentarios}}
+        </div>
+        <div class="cell medium-6">
+            <label>Archivo adjunto:</label>
+            {{acta_despacho.acta}}
+        </div>
+        <button type="submit" class="cell success button">Añadir Acta</button>
+        
+    </form>
+</div>
+
+{% endblock body-content %}

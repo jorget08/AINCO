@@ -13,5 +13,6 @@ class GestionResource(resources.ModelResource):
 
 class GestionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_class = GestionResource
+    readonly_fields = ('fecha_gestion',)
 
 admin.site.register(Gestion, GestionAdmin)

@@ -55,6 +55,9 @@ LOCAL_APPS = (
     'applications.sede',
     'applications.acuerdo',
     'applications.biblioteca',
+    'applications.castigados',
+    'applications.actaDespacho',
+    'applications.gestionAbogado'
 )
 
 THIRD_PARTY_APPS = (

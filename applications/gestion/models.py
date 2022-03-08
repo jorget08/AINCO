@@ -186,7 +186,6 @@ class Gestion(models.Model):
         self.deudores.hora_nueva_accion = self.hora_nueva_accion
         self.deudores.nueva_accion = self.get_nueva_accion()
         self.deudores.comentarios = self.comentarios
-        self.deudores.castigado = self.castigada
         self.deudores.contador_gestiones = self.deudores.contador_gestiones + 1
         self.deudores.save()
 

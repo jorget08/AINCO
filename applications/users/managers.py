@@ -29,3 +29,8 @@ class UserManager(BaseUserManager, models.Manager):
         return self.filter(
             is_superuser=False
         ).order_by('-last_login')
+
+    
+    def abogadosUsers(self):
+        usuarios = self.filter(ocupation='4')
+        return usuarios

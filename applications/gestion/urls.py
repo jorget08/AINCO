@@ -31,4 +31,8 @@ urlpatterns = [
 
     path(route = 'castigoCartera/<int:pk>', view = views.CastigarCartera.as_view(), name='castigada'),
 
+    path(route = 'gestion/<int:pk>', view = views.GestionAbogadoView.as_view(), name = 'gestionAbogado'),
+
+    path(route = 'acta/<int:pk>', view = views.ActaDespachoView.as_view(), name = 'actaDespacho'),
+
 ]

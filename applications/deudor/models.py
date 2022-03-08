@@ -55,7 +55,8 @@ class Deudor(models.Model):
     objects = DeudorManager()
     
     #RELACIONES
-    usuarios = models.ManyToManyField(User, blank=True)
+    usuarios = models.ManyToManyField(User, blank=True, related_name='deudor_usuarios')
+    
     #user = models.ForeignKey(User, on_delete=models.CASCADE, null = True)
     """administradores = models.ForeignKey(Admin, on_delete=models.CASCADE)
     sedes = models.ForeignKey(Sede, on_delete=models.CASCADE)

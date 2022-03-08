@@ -1,0 +1,80 @@
+{% extends 'users/base_usuarios.html' %}
+
+{% load static %}
+
+{% load humanize %}
+
+{% block content %}
+<style>
+    th, td {
+        border: 2px solid #5ce1e6;
+    }
+    thead {
+        background-color: #00c2cb; color:white;
+    }
+    .ali {
+        text-align: right;
+    }
+</style>
+
+<div class="top-bar" id="responsive-menu" style="background-color: #00c2cb">
+    <div class="top-bar-left">
+        <ul class="dropdown menu" data-dropdown-menu style="background-color: #00c2cb">
+            <li style="width:160px;height:40px;"><img src="{% static 'img/logo.png' %}" alt="Logo" style="width:100%;height:100%;"></li>
+            <li style="width:10px"></li>
+            <li style="background-color: #5ce1e6"><a href="{% url 'users:dashboard' %}" style="color:white; font-family:'Archivo Black';font-size:20px">Agenda</a></li>
+        </ul>
+    </div>
+    <div class="top-bar-right">
+        <form method="GET" class="">
+            <ul class="menu" style="background-color: #00c2cb">
+                <li><li style="background-color: #5ce1e6"><a href="{% url 'users:logout' %}" style="color:white; font-family:'Archivo Black';">Salir</a></li></li>
+            </ul>
+        </form>
+    </div>
+</div>
+
+<br>
+    
+<div class="grid-container align-center">
+    <div class="grid-x grid-padding-x align-center bordered">
+        <table class="sortable" id="agendarTable" style="width:100%;">
+            <thead>
+                <tr>
+                    <th style="width:20%;">Deudor</th>
+                    <th style="width:10%;">Calificación viabilidad </th>
+                    <th style="width:20%;">Observaciones</th>
+                    <th style="width:20%;">Archivos </th>
+                    <th style="width:20%;">Usiarios</th>
+                    <th style="width:10%;"></th>
+                </tr>
+            </thead>
+                <tbody>
+                    {% for deudor in deudores %}
+                    <tr>
+                    <form method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="deudor" value="{{ deudor.pk }}" />
+                    <input type="hidden" name="usuario" value="{{ usuario }}" />
+                    {% csrf_token %}
+                    <td>{{deudor.nombres}} {{deudor.apellidos}}</td>
+                    <td>{{form.calificacion_viabilidad}}</td>
+                    <td>{{form.observaciones}}</td>
+                    <td>
+                        {{form.archivo}}{{form.archivo2}}
+                        {{form.archivo3}}{{form.archivo4}}
+                        {{form.archivo5}}{{form.archivo6}}
+                    </td>
+                    <td>{{form.users}}</td>
+                    <td>
+                        <button type="submit" class="button success">Asignar</button>
+                    </td>
+                    </tr>
+                    </form>
+                {% endfor %}
+                </tbody>
+            </table>
+    </div>
+</div>
+<br>
+        
+{% endblock content %}

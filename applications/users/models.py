@@ -11,6 +11,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     ADMINISTRADOR_LOCAL = '1'
     ADMINISTRADOR_REGIONAL = '2'
     SUPER_ADMINISTRADOR = '3'
+    ABOGADO = '4'
     # GENEROS
     VARON = 'M'
     MUJER = 'F'
@@ -20,7 +21,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         (OPERARIO, 'Operario'),
         (ADMINISTRADOR_LOCAL, 'Administrador de local'),
         (ADMINISTRADOR_REGIONAL, 'Administrador de region'),
-        (SUPER_ADMINISTRADOR, 'Super administrador')
+        (SUPER_ADMINISTRADOR, 'Super administrador'),
+        (ABOGADO, 'Abogado')
     ]
 
     GENDER_CHOICES = [
@@ -68,4 +70,4 @@ class User(AbstractBaseUser, PermissionsMixin):
         return str(self.full_name)
 
     def __str__(self):
-        return self.full_name
+        return str(self.pk) + ' - ' + self.full_name
