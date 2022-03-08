@@ -32,11 +32,11 @@ class Deudor(models.Model):
     aportes_sociales_vencidos = models.IntegerField(default=0)
 
     #Nuevas variables
-    total_insolutos = models.BigIntegerField(default=0)
-    total_provisiones = models.BigIntegerField(default=0)
-    total_estar_al_dia = models.BigIntegerField(default=0)
-    total_credito = models.BigIntegerField(default=0)
-    total_liberar_provision = models.BigIntegerField(default=0)
+    total_insolutos = models.BigIntegerField(default=0, blank=True)
+    total_provisiones = models.BigIntegerField(default=0, blank=True)
+    total_estar_al_dia = models.BigIntegerField(default=0, blank=True)
+    total_credito = models.BigIntegerField(default=0, blank=True)
+    total_liberar_provision = models.BigIntegerField(default=0, blank=True)
     
     fecha_nueva_accion = models.DateField(blank=True, null = True)
     hora_nueva_accion = models.TimeField(blank=True, null = True)
