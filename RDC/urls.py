@@ -19,10 +19,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    #path('admin/', admin.site.urls),
-    #path('', include('applications.users.urls')),
-    #path('', include('applications.gestion.urls')),
-    #path('', include('applications.biblioteca.urls')),
+    path('admin/', admin.site.urls),
+    path('', include('applications.users.urls')),
+    path('', include('applications.gestion.urls')),
+    path('', include('applications.biblioteca.urls')),
     
 
 ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
