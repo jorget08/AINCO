@@ -460,20 +460,30 @@
         </div>
     </div>
 </div>
-<div class="grid-container align-center">
-    <div class="grid-x grid-padding-x align-center bordered">
-        <form action="{% url 'gestion:castigada' deudor.pk %}" class="cell medium-3 grid-x grid-margin-x" 
-        method="POST" style="border: 5px solid red; border-radius: 10px;">
+<div class="reveal" id="entregaAbogado" data-reveal>
+    <h3>CASTIGAR CARTERA</h5>
+        <form action="{% url 'gestion:castigada' deudor.pk %}" class="grid-x grid-margin-x" 
+        method="POST">
             {% csrf_token %}
-            <h5 class="cell" style="margin-bottom: 1em; text-align: center;">CASTIGAR CARTERA</h5>
-            <div class="cell">
-                <p>=======> {{ castigada.castigado }} Castigar</p>
+            <button class="close-button" data-close aria-label="Close modal" type="button">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="cell medium-4">
             </div>
-            <div class="cell">
-                <button type="submit" class="button success" style="width: 210px;">Castigar</button>
+            <div class="cell medium-4">
+                <p>{{ castigada.castigado }} Entregar</p>
             </div>
+            <div class="cell medium-4">
+            </div>
+            <div class="cell medium-4">
+            </div>
+            <div class="cell medium-4">
+                <button type="submit" class="button success">Entregar</button>
+            </div>
+            <div class="cell medium-4">
+            </div>
+            
         </form>
-    </div>
 </div>
 
 <div class="reveal" id="acuerdoPago" data-reveal>

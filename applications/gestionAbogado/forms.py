@@ -8,6 +8,37 @@ class GestionAbogadoForm(forms.ModelForm):
         
         model = GestionAbogado
 
-        fields = ('user', 'deudores', 'califiacion_viabilidad', 'observaciones',
-                  'archivo', 'archivo2', 'archivo3', 'archivo4', 'archivo5',
-                  'archivo6')
+        fields = ('user', 'deudores','actuaciones_proceso','fecha_inicia_termino',
+                  'fecha_finaliza_termino','fecha_registro','fecha_control',
+                  'calificacion_viabilidad','observaciones','archivo',)
+
+        widgets = {
+            'fecha_control' : forms.DateInput(
+                format='%Y-%m-%d',
+                attrs={
+                    'type': 'date',
+                    'class': 'input-group-field',
+                },
+            ),
+            'fecha_registro' : forms.DateInput(
+                format='%Y-%m-%d',
+                attrs={
+                    'type': 'date',
+                    'class': 'input-group-field',
+                },
+            ),
+            'fecha_inicia_termino' : forms.DateInput(
+                format='%Y-%m-%d',
+                attrs={
+                    'type': 'date',
+                    'class': 'input-group-field',
+                },
+            ),
+            'fecha_finaliza_termino' : forms.DateInput(
+                format='%Y-%m-%d',
+                attrs={
+                    'type': 'date',
+                    'class': 'input-group-field',
+                },
+            ),
+        }

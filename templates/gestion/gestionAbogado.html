@@ -195,14 +195,14 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td class="ali">{{deudor.total_estar_al_dia}}</td>
-                <td class="ali">{{deudor.total_credito}}</td>
-                <td class="ali">{{deudor.total_liberar_provision}}</td>
+                <td class="ali">$ {{deudor.total_estar_al_dia|intcomma}}</td>
+                <td class="ali">$ {{deudor.total_credito|intcomma}}</td>
+                <td class="ali">$ {{deudor.total_liberar_provision|intcomma}}</td>
                 <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
-                <td class="ali">{{deudor.total_insolutos}}</td>
+                <td class="ali">$ {{deudor.total_insolutos|intcomma}}</td>
             </tr>
         </tbody>
     </table>
@@ -401,13 +401,12 @@
             </tr>
             <tr>
                 <th>Fecha actuación</th>
-                <th>Calificaxión viabilidad</th>
+                <th>Actiación del proceso</th>
+                <th>Inicio termino</th>
+                <th>Fecha fin de termino</th>
+                <th>Fecha programada</th>
+                <th>Calificacion de viabilidad</th>
                 <th>Observaciones</th>
-                <th>Archivo adjunto</th>
-                <th>Archivo adjunto</th>
-                <th>Archivo adjunto</th>
-                <th>Archivo adjunto</th>
-                <th>Archivo adjunto</th>
                 <th>Archivo adjunto</th>
             </tr>
         </thead>
@@ -415,38 +414,13 @@
         <tbody>
             <tr>
                 <td>{{actuacion.fecha_gestionAbogado}}</td>
-                <td>{{actuacion.califiacion_viabilidad}}</td>
+                <td>{{actuacion.actuaciones_proceso}}</td>
+                <td>{{actuacion.fecha_inicia_termino}}</td>
+                <td>{{actuacion.fecha_finaliza_termino}}</td>
+                <td>{{actuacion.fecha_control}}</td>
+                <td>{{actuacion.get_calificacion_viabilidad}}</td>
                 <td>{{actuacion.observaciones}}</td>
-                {% if actuacion.archivo %}
-                <td><a href="{{actuacion.archivo.url}}" target="_blank">Archivo</a></td>
-                {% else %}
-                <td></td>
-                {% endif %}
-                {% if actuacion.archivo2 %}
-                <td><a href="{{actuacion.archivo2.url}}" target="_blank">Archivo</a></td>
-                {% else %}
-                <td></td>
-                {% endif %}
-                {% if actuacion.archivo3 %}
-                <td><a href="{{actuacion.archivo3.url}}" target="_blank">Archivo</a></td>
-                {% else %}
-                <td></td>
-                {% endif %}
-                {% if actuacion.archivo4 %}
-                <td><a href="{{actuacion.archivo4.url}}" target="_blank">Archivo</a></td>
-                {% else %}
-                <td></td>
-                {% endif %}
-                {% if actuacion.archivo5 %}
-                <td><a href="{{actuacion.archivo5.url}}" target="_blank">Archivo</a></td>
-                {% else %}
-                <td></td>
-                {% endif %}
-                {% if actuacion.archivo6 %}
-                <td><a href="{{actuacion.archivo6.url}}" target="_blank">Archivo</a></td>
-                {% else %}
-                <td></td>
-                {% endif %}
+                <td><a href="{{actuacion.archivo}}" target="_blank">Archivo</a></td>
             </tr>
         </tbody>
         {% endfor %}
@@ -568,44 +542,48 @@
 
 <div class="reveal" id="gestionAbogado" data-reveal>
     <h3>Gestion</h3>
-    <form action="{% url 'gestion:gestionAbogado' deudor.pk %}" method="POST" class="grid-x grid-margin-x" enctype="multipart/form-data">
+    <form action="{% url 'gestion:gestionAbogado' deudor.pk %}" method="POST" class="cell medium-12 grid-x grid-margin-x" enctype="multipart/form-data">
         {% csrf_token %}
         <button class="close-button" data-close aria-label="Close modal" type="button">
             <span aria-hidden="true">&times;</span>
         </button>
         <input type="hidden" name="user" value="{{ user.pk }}" />
         <input type="hidden" name="deudores" value="{{ deudo.pk }}" />
-        <div class="cell medium-8">
-            <label>Calificacion de viabilidad:</label>
-            {{form.califiacion_viabilidad}}
+        <div class="cell small-4">
+            <label>Actuación del proceso:</label>
+            {{form.actuaciones_proceso}}
         </div>
-        <div class="cell medium-6">
-            <label>Archivo adjunto:</label>
-            {{form.archivo}}
+        <div class="cell small-4">
+            <label>Fecha inicio del termino:</label>
+            {{form.fecha_inicia_termino}}
         </div>
-        <div class="cell medium-6">
-            <label>Archivo adjunto:</label>
-            {{form.archivo2}}
+        <div class="cell small-4">
+            <label>Fecha fin del termino:</label>
+            {{form.fecha_finaliza_termino}}
         </div>
-        <div class="cell medium-6">
-            <label>Archivo adjunto:</label>
-            {{form.archivo3}}
+        <div class="cell small-4">
+            <label>Fecha de registro:</label>
+            {{form.fecha_registro}}
         </div>
-        <div class="cell medium-6">
-            <label>Archivo adjunto:</label>
-            {{form.archivo4}}
+        <div class="cell small-4">
+            <label>Fecha próximo control:</label>
+            {{form.fecha_control}}
         </div>
-        <div class="cell medium-6">
-            <label>Archivo adjunto:</label>
-            {{form.archivo5}}
+        <div class="cell small-4">
+            <label>Calificación de viabilidad:</label>
+            {{form.calificacion_viabilidad}}
         </div>
-        <div class="cell medium-6">
-            <label>Archivo adjunto:</label>
-            {{form.archivo6}}
+        <div class="cell small-2">
         </div>
-        <div class="cell medium-12">
+        <div class="cell small-8">
             <label>Observaciones:</label>
             {{form.observaciones}}
+        </div>
+        <div class="cell small-2">
+        </div>
+        <div class="cell small-4">
+            <label>Archivo adjunto:</label>
+            {{form.archivo}}
         </div>
         <button type="submit" class="cell success button">Gestionar</button>
         

@@ -52,7 +52,7 @@
                 <thead style="background-color: #00c2cb; color:white">
                     <tr>
                         <th class="sorttable_nosort">Deudor</th>
-                       
+                        <th class="sorttable_nosort">Fecha Programada</th>
                         <th class="sorttable_nosort">Mis Comentarios</th>
                         <th style="cursor: pointer">Saldo Insoluto <i class="fi-list"></i></th>
                         <th style="cursor: pointer">Total Provisión <i class="fi-list"></i></th>
@@ -63,9 +63,8 @@
                     <tr>
                         <td class="ali"><a href="{% url 'gestion:gestionAbogado' deudor.cedula %}">{{deudor.nombres}} {{deudor.apellidos}}</a></td>
 
-                            
+                            <td>{{ deudor.fecha_nueva_accion }}</td>
                             <td>{{ deudor.comentarios }}</td>
-                                
                             <td>$ {{ deudor.total_insolutos|intcomma }}</td>
                             <td>$ {{ deudor.total_provisiones|intcomma }}</td>
                     </tr>

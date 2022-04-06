@@ -146,6 +146,28 @@ class GestionAbogadoView(LoginRequiredMixin, generic.CreateView):
         
         #import pdb; pdb.set_trace() #--> el debug
         return context
+    # def post(self, request, *args, **kwargs):
+    #     #import pdb; pdb.set_trace() #--> el debug
+    #     deudor = self.get_object()
+    #     GestionAbogado.objects.create(
+    #         actuaciones_proceso = request.POST['actuaciones_proceso'],
+    #         fecha_inicia_termino = request.POST['fecha_inicia_termino'],
+    #         fecha_finaliza_termino = request.POST['fecha_finaliza_termino'],
+    #         fecha_registro = request.POST['fecha_registro'],
+    #         fecha_control = request.POST['fecha_control'],
+    #         calificacion_viabilidad = request.POST['calificacion_viabilidad'],   
+    #         observaciones = request.POST['observaciones'],   
+    #         archivo = request.FILES['archivo'],
+    #         deudores = deudor,
+    #         user = self.request.user  
+    #     )
+    #     return HttpResponseRedirect(
+    #             reverse(
+    #                 'gestion:gestionAbogado',
+    #                 kwargs={'pk': deudor.pk}
+    #             )
+    #         )
+        
 
 
 
