@@ -68,11 +68,11 @@
                         {% endfor %}
                         <td></td>
                         <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>{{adicionado.tel_fijo_add}}</td>
+                        <td>{{adicionado.celular_add}}</td>
+                        <td>{{adicionado.correo_add}}</td>
+                        <td>{{adicionado.tel_empresa_add}}</td>
+                        <td>{{adicionado.celular_empresa_add}}</td>
                         <!--add-->
                         <td><a href="{% url 'gestion:add-info' deudor.pk %}" target="_blank" class="button"><i class="fi-plus"></i></a></td>
                         <td></td>
@@ -420,7 +420,7 @@
                 <td>{{actuacion.fecha_control}}</td>
                 <td>{{actuacion.get_calificacion_viabilidad}}</td>
                 <td>{{actuacion.observaciones}}</td>
-                <td><a href="{{actuacion.archivo}}" target="_blank">Archivo</a></td>
+                <td><a href="{{actuacion.archivo.url}}" target="_blank">Archivo</a></td>
             </tr>
         </tbody>
         {% endfor %}

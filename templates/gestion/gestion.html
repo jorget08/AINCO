@@ -68,11 +68,13 @@
                         {% endfor %}
                         <td></td>
                         <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        {% comment %} {% for adi in adicionado|slice:"1"%} {% endcomment %}
+                        <td>{{adicionado.tel_fijo_add}}</td>
+                        <td>{{adicionado.celular_add}}</td>
+                        <td>{{adicionado.correo_add}}</td>
+                        <td>{{adicionado.tel_empresa_add}}</td>
+                        <td>{{adicionado.celular_empresa_add}}</td>
+                        {% comment %} {% endfor %} {% endcomment %}
                         <!--add-->
                         <td><a href="{% url 'gestion:add-info' deudor.pk %}" target="_blank" class="button"><i class="fi-plus"></i></a></td>
                         <td></td>
@@ -195,14 +197,14 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td class="ali">{{deudor.total_estar_al_dia}}</td>
-                <td class="ali">{{deudor.total_credito}}</td>
-                <td class="ali">{{deudor.total_liberar_provision}}</td>
+                <td class="ali">$ {{deudor.total_estar_al_dia|intcomma}}</td>
+                <td class="ali">$ {{deudor.total_credito|intcomma}}</td>
+                <td class="ali">$ {{deudor.total_liberar_provision|intcomma}}</td>
                 <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
-                <td class="ali">{{deudor.total_insolutos}}</td>
+                <td class="ali">$ {{deudor.total_insolutos|intcomma}}</td>
             </tr>
         </tbody>
     </table>
