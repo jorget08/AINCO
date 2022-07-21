@@ -1,5 +1,8 @@
 from django.db import models
 
+from applications.empresaSocia.models import EmpresaSocia
+
+
 # Create your models here.
 class Sede(models.Model):
     #MODELO
@@ -10,7 +13,10 @@ class Sede(models.Model):
     celular = models.CharField(max_length=10)
     responsable = models.CharField(max_length=100)
     num_trabajadores = models.PositiveSmallIntegerField()
-    nombre = models.CharField(max_length=50)
+    nombre = models.CharField(max_length=250)
+
+    empresaSocia = models.ForeignKey(EmpresaSocia, on_delete=models.CASCADE, null = True, related_name="empresaSocia_sede")
+
 
     def __str__(self):
         return self.nombre

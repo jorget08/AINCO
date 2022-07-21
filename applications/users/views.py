@@ -167,13 +167,11 @@ class AgendarView(LoginRequiredMixin, FormView):
         return context
 
     def post(self, request, *args, **kwargs):
-        #import pdb; pdb.set_trace()
+        import pdb; pdb.set_trace()
         deudor = Deudor.objects.get(cedula=request.POST['deudores'])
         deudor.fecha_nueva_accion = request.POST['fecha_nueva_accion']
         vencidos = Deudor.objects.filter(cedula=request.POST['deudores']).filter(credito_deudor__vencido=True).count()
-        insoluto_mes = Deudor.objects.filter(cedula=request.POST['deudores']).filter(credito_deudor__vencido=True).aggregate(
-            sld_ins = Sum('credito_deudor__saldo_insoluto')
-        )
+        insoluto_mes = Deudor.objects.filter(cedula=request.POST['deudores']).filter(credito_deudor__vencido=True).aggregate(sld_ins = Sum('credito_deudor__saldo_insoluto'))
 
         usuario = self.request.user
         usuario.contador_creditos_vencidos = usuario.contador_creditos_vencidos + vencidos

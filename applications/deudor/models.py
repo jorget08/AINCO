@@ -1,6 +1,8 @@
 from django.db import models
 
 from applications.users.models import User
+from applications.empresaSocia.models import EmpresaSocia
+from applications.sede.models import Sede
 from .managers import DeudorManager
 
 # Create your models here.
@@ -56,7 +58,10 @@ class Deudor(models.Model):
     
     #RELACIONES
     usuarios = models.ManyToManyField(User, blank=True, related_name='deudor_usuarios')
-    
+    empresaSocia = models.ForeignKey(EmpresaSocia, on_delete=models.CASCADE, null = True, blank=True, related_name="empresaSocia_deudor")
+    sede = models.OneToOneField(Sede, on_delete=models.CASCADE, null = True,blank=True, related_name="sede_deudor")
+
+
     #user = models.ForeignKey(User, on_delete=models.CASCADE, null = True)
     """administradores = models.ForeignKey(Admin, on_delete=models.CASCADE)
     sedes = models.ForeignKey(Sede, on_delete=models.CASCADE)

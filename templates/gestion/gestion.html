@@ -68,13 +68,11 @@
                         {% endfor %}
                         <td></td>
                         <td></td>
-                        {% comment %} {% for adi in adicionado|slice:"1"%} {% endcomment %}
                         <td>{{adicionado.tel_fijo_add}}</td>
                         <td>{{adicionado.celular_add}}</td>
                         <td>{{adicionado.correo_add}}</td>
                         <td>{{adicionado.tel_empresa_add}}</td>
-                        <td>{{adicionado.celular_empresa_add}}</td>
-                        {% comment %} {% endfor %} {% endcomment %}
+                        <td>{{adicionado.celular_empresa_add}}</td>                    
                         <!--add-->
                         <td><a href="{% url 'gestion:add-info' deudor.pk %}" target="_blank" class="button"><i class="fi-plus"></i></a></td>
                         <td></td>

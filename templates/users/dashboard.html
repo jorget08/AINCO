@@ -128,6 +128,8 @@
                         <th class="sorttable_nosort">Hora</th>
                         <th class="sorttable_nosort">Nueva acción</th>
                         <th class="sorttable_nosort">Mis Comentarios</th>
+                        <th class="sorttable_nosort">Empresa</th>
+                        <th class="sorttable_nosort">Sede</th>
                         <th style="cursor: pointer">Saldo Insoluto <i class="fi-list"></i></th>
                         <th style="cursor: pointer">Total Provisión <i class="fi-list"></i></th>
                     </tr>
@@ -141,7 +143,8 @@
                             <td>{{ deudor.hora_nueva_accion }}</td>
                             <td>{{ deudor.nueva_accion }}</td>
                             <td>{{ deudor.comentarios }}</td>
-                                
+                            <td>{{ deudor.empresaSocia }}</td>
+                            <td>{{ deudor.sede }}</td>
                             <td>$ {{ deudor.total_insolutos|intcomma }}</td>
                             <td>$ {{ deudor.total_provisiones|intcomma }}</td>
                     </tr>
