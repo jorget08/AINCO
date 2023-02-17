@@ -11,11 +11,11 @@ ALLOWED_HOSTS = ['*']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dcm4l2ghu4u6a1',
-        'USER': 'cfxilfvfpjnmup',
-        'PASSWORD': 'ff68bddfc17861d1669cb701533d7f9f8fbf7ea916d93356a4f8d2d570f7bcd6',
-        'HOST': 'ec2-44-199-19-138.compute-1.amazonaws.com',
-        'PORT': 5432,
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': 'YzhlNTx0uvEaDmZb7mxr',
+        'HOST': 'containers-us-west-85.railway.app',
+        'PORT': 6240,
     }
 }
 """import dj_database_url
