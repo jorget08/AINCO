@@ -23,7 +23,6 @@ gunicorn
 html5lib
 idna
 kombu
-librabbitmq
 MarkupPy
 MouseInfo
 numpy
@@ -45,7 +44,6 @@ PyTweening
 pytz
 PyYAML
 redis
-reportlab==3.5.67
 requests
 six
 soupsieve
